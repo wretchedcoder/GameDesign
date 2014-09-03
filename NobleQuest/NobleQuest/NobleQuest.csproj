@@ -35,7 +35,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameEntity.cs" />
+    <Compile Include="Entity\EntityFactory.cs" />
+    <Compile Include="Entity\GameEntity.cs" />
+    <Compile Include="Entity\NodeEntity.cs" />
+    <Compile Include="Entity\PathEntity.cs" />
+    <Compile Include="Entity\TownNode.cs" />
     <Compile Include="NobleQuestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

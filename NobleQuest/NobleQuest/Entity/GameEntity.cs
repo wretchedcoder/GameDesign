@@ -11,26 +11,27 @@ namespace NobleQuest
 {
     public class GameEntity
     {
-        public Texture2D texture { get; set; }
-        public Vector2 position { get; set; }
-        public Vector2 velocity { get; set; }
-        public Vector2 midpoint { get; set; }
-        public float rotation { get; set; }
-        public Vector2 offset { get; set; }
-        public Rectangle rectangle { get; set; }
-        public Game game { get; set; }
+        public Texture2D Texture { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+        public Vector2 Midpoint { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Offset { get; set; }
+        public Rectangle Rectangle { get; set; }
+        public Game Game { get; set; }
+        public Boolean PlayerOwned { get; set; }
 
         public GameEntity() { }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                this.texture,
-                this.position,
+                this.Texture,
+                this.Position,
                 null,
                 Color.White,
-                this.rotation,
-                this.midpoint,
+                this.Rotation,
+                this.Midpoint,
                 1.0f,
                 SpriteEffects.None,
                 1.0f);

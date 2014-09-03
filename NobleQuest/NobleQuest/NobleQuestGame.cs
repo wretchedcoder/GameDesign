@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using NobleQuest.Entity;
 #endregion
 
 namespace NobleQuest
@@ -16,16 +17,18 @@ namespace NobleQuest
     /// </summary>
     public class NobleQuestGame : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        List<GameEntity> gameEntityList;
+        GraphicsDeviceManager Graphics;
+        SpriteBatch SpriteBatch;
+        List<GameEntity> GameEntityList;
+        EntityFactory EntityFactory;
 
         public NobleQuestGame()
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            gameEntityList = new List<GameEntity>();
+            GameEntityList = new List<GameEntity>();
+            EntityFactory = new EntityFactory();
         }
 
         /// <summary>
@@ -37,13 +40,9 @@ namespace NobleQuest
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            GameEntity gameEntity = new GameEntity();
-            gameEntity.texture = Content.Load<Texture2D>("City");
-            gameEntity.game = this;
-            gameEntity.midpoint = new Vector2(16.0f, 16.0f);
-            gameEntity.position = new Vector2(100f, 100f);
+            GameEntity gameEntity = EntityFactory.GetPlayerTown(new Vector2(100f, 100f));
 
-            gameEntityList.Add(gameEntity);
+            GameEntityList.Add(gameEntity);
 
             base.Initialize();
         }
@@ -55,9 +54,10 @@ namespace NobleQuest
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace NobleQuest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Ivory);
 
-            this.spriteBatch.Begin();
-            for (int i = gameEntityList.Count - 1; i >= 0; i-- )
+            this.SpriteBatch.Begin();
+            for (int i = GameEntityList.Count - 1; i >= 0; i-- )
             {
-                gameEntityList[i].Draw(this.spriteBatch);
+                GameEntityList[i].Draw(this.SpriteBatch);
             }
-            this.spriteBatch.End();
+            this.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
