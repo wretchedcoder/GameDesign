@@ -39,10 +39,9 @@ namespace NobleQuest
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            GameEntity gameEntity = EntityFactory.GetPlayerTown(new Vector2(100f, 100f));
+            MapBuilder MapBuilder = new MapBuilder();
 
-            GameEntityList.Add(gameEntity);
+            GameEntityList.AddRange(MapBuilder.BuildMap(this));
 
             base.Initialize();
         }

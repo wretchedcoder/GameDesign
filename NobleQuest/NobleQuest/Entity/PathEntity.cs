@@ -9,9 +9,16 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace NobleQuest.Entity
 {
-    class PathEntity : GameEntity
+    public class PathEntity : GameEntity
     {
         public NodeEntity LeftNode { get; set; }
         public NodeEntity RightNode { get; set; }
+
+        public PathEntity(NodeEntity LeftNode, NodeEntity RightNode)
+        {
+            this.LeftNode = LeftNode;
+            this.RightNode = RightNode;
+        }
+        
     }
 }

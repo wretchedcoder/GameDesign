@@ -13,11 +13,10 @@ namespace NobleQuest.Entity
     {
         public enum Resources {WOOD, ORE, HAY};
         public Boolean StructurePresent { get; set; }
-        public int Resource { get; set; }
-        /*
+        public Resources Resource { get; set; }
         public List<PathEntity> LeftNodes { get; set; }
         public List<PathEntity> RightNodes { get; set; }
         public PathEntity PreferredPathEntity { get; set; }
-         * */
+        
     }
 }

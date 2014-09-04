@@ -16,10 +16,56 @@ namespace NobleQuest.Entity
 
         }
 
-        public GameEntity GetPlayerTown(Vector2 position)
+        public GameEntity GetPlayerTown(Game game, Vector2 position)
         {
+            // Instantiate and Set Properties in GameEntity
+            TownNode town = new TownNode();            
+            town.Texture = game.Content.Load<Texture2D>("PlayerCity");
+            town.Position = position;
+            town.Velocity = new Vector2(0f, 0f);
+            town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
+            town.Rotation = 0.0f;
+            town.Offset = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
+            town.Rectangle = new Rectangle();
+            town.Game = game;
+            town.PlayerOwned = true;
+
+            // Set Properties in NodeEntity
+            town.StructurePresent = true;
+            town.Resource = NodeEntity.Resources.WOOD;
+            town.LeftNodes = null;
+            town.RightNodes = new List<PathEntity>();
+            town.PreferredPathEntity = null;
+
+            // Set Properties in TownNode
+                       
+
+            return town;
+        }
+
+        public GameEntity GetEnemyTown(Game game, Vector2 position)
+        {
+            // Instantiate and Set Properties in GameEntity
             TownNode town = new TownNode();
-            
+            town.Texture = game.Content.Load<Texture2D>("EnemyCity");
+            town.Position = position;
+            town.Velocity = new Vector2(0f, 0f);
+            town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
+            town.Rotation = 0.0f;
+            town.Offset = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
+            town.Rectangle = new Rectangle();
+            town.Game = game;
+            town.PlayerOwned = true;
+
+            // Set Properties in NodeEntity
+            town.StructurePresent = true;
+            town.Resource = NodeEntity.Resources.WOOD;
+            town.LeftNodes = null;
+            town.RightNodes = new List<PathEntity>();
+            town.PreferredPathEntity = null;
+
+            // Set Properties in TownNode
+
 
             return town;
         }
