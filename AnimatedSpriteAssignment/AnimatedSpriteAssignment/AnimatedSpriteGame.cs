@@ -14,12 +14,15 @@ namespace AnimatedSpriteAssignment
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class AnimatedSpriteGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Stickman stickman;
+        public SpriteFont spritefont;
+        public Vector2 textPosition;
 
-        public Game1()
+        public AnimatedSpriteGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,8 +37,10 @@ namespace AnimatedSpriteAssignment
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            Texture2D spritesheet = Content.Load<Texture2D>("spritesheet");
+            Vector2 position = new Vector2(10f, 10f);
+            stickman = new Stickman(spritesheet, position, this);
+            textPosition = new Vector2(100f, 100f);
             base.Initialize();
         }
 
@@ -47,8 +52,7 @@ namespace AnimatedSpriteAssignment
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            spritefont = Content.Load<SpriteFont>("myFont");
         }
 
         /// <summary>
@@ -70,7 +74,7 @@ namespace AnimatedSpriteAssignment
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            stickman.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -83,7 +87,9 @@ namespace AnimatedSpriteAssignment
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            stickman.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
