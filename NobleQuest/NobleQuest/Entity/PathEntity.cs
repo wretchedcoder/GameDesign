@@ -14,6 +14,11 @@ namespace NobleQuest.Entity
         public NodeEntity LeftNode { get; set; }
         public NodeEntity RightNode { get; set; }
 
+        public PathEntity()
+        {
+
+        }
+
         public PathEntity(NodeEntity LeftNode, NodeEntity RightNode)
         {
             this.LeftNode = LeftNode;

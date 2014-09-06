@@ -56,6 +56,7 @@
     <Content Include="Content\EnemyCity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Path.png" />
     <Content Include="Content\PlayerCity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

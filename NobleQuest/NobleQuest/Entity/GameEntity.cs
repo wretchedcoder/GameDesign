@@ -20,6 +20,7 @@ namespace NobleQuest
         public Rectangle Rectangle { get; set; }
         public Game Game { get; set; }
         public Boolean PlayerOwned { get; set; }
+        public Boolean EnemyOwned { get; set; }
 
         public GameEntity() { }
 

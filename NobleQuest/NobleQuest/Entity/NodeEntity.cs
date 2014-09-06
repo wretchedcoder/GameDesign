@@ -14,9 +14,14 @@ namespace NobleQuest.Entity
         public enum Resources {WOOD, ORE, HAY};
         public Boolean StructurePresent { get; set; }
         public Resources Resource { get; set; }
-        public List<PathEntity> LeftNodes { get; set; }
-        public List<PathEntity> RightNodes { get; set; }
+        public HashSet<PathEntity> LeftPaths { get; set; }
+        public HashSet<PathEntity> RightPaths { get; set; }
         public PathEntity PreferredPathEntity { get; set; }
+
+        public float DistanceTo(NodeEntity node)
+        {
+            return Vector2.Distance(this.Position, node.Position);
+        }
         
     }
 }
