@@ -17,7 +17,8 @@ namespace NobleQuest
         public Vector2 Midpoint { get; set; }
         public float Rotation { get; set; }
         public Vector2 Offset { get; set; }
-        public Rectangle Rectangle { get; set; }
+        public Rectangle SrcRectangle { get; set; }
+        public Rectangle DestRectangle { get; set; }
         public Game Game { get; set; }
         public Boolean PlayerOwned { get; set; }
         public Boolean EnemyOwned { get; set; }
@@ -29,7 +30,7 @@ namespace NobleQuest
             spriteBatch.Draw(
                 this.Texture,
                 this.Position,
-                null,
+                this.SrcRectangle,
                 Color.White,
                 this.Rotation,
                 this.Midpoint,

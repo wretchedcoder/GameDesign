@@ -17,11 +17,7 @@ namespace NobleQuest.Entity
         public HashSet<PathEntity> LeftPaths { get; set; }
         public HashSet<PathEntity> RightPaths { get; set; }
         public PathEntity PreferredPathEntity { get; set; }
-
-        public float DistanceTo(NodeEntity node)
-        {
-            return Vector2.Distance(this.Position, node.Position);
-        }
-        
+        public Boolean FortPresent { get; set; }
+        public Fort Fort { get; set; }
     }
 }
