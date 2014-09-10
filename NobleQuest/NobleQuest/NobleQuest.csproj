@@ -35,9 +35,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entity\DynamicEntity.cs" />
     <Compile Include="Entity\EntityFactory.cs" />
     <Compile Include="Entity\Fort.cs" />
     <Compile Include="Entity\GameEntity.cs" />
+    <Compile Include="Entity\InfantryEntity.cs" />
     <Compile Include="Entity\MapBuilder.cs" />
     <Compile Include="Entity\NodeEntity.cs" />
     <Compile Include="Entity\PathEntity.cs" />
@@ -64,6 +66,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\PlayerCity.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PlayerInfantry.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

@@ -37,7 +37,7 @@ namespace NobleQuest.Entity
             town.StructurePresent = true;
             town.Resource = NodeEntity.Resources.WOOD;
             town.LeftPaths = null;
-            town.RightPaths = new HashSet<PathEntity>();
+            town.RightPaths = new List<PathEntity>();
             town.PreferredPathEntity = null;
 
             // Set Properties in TownNode
@@ -65,7 +65,7 @@ namespace NobleQuest.Entity
             // Set Properties in NodeEntity
             town.StructurePresent = true;
             town.Resource = NodeEntity.Resources.WOOD;
-            town.LeftPaths = new HashSet<PathEntity>();
+            town.LeftPaths = new List<PathEntity>();
             town.RightPaths = null;
             town.PreferredPathEntity = null;
 
@@ -133,13 +133,39 @@ namespace NobleQuest.Entity
             // Set Properties in NodeEntity
             grassNode.StructurePresent = true;
             grassNode.Resource = NodeEntity.Resources.HAY;
-            grassNode.LeftPaths = new HashSet<PathEntity>();
+            grassNode.LeftPaths = new List<PathEntity>();
             grassNode.RightPaths = null;
             grassNode.PreferredPathEntity = null;
             grassNode.FortPresent = false;
             grassNode.Fort = null;
 
             return grassNode;
+        }
+
+        public GameEntity GetInfantryEntity(Game game, bool playerOwned, GameEntity town)
+        {
+            // Instantiate and Set Properties in GameEntity
+            InfantryEntity infantryEntity = new InfantryEntity();
+            infantryEntity.Texture = game.Content.Load<Texture2D>("PlayerInfantry");
+            infantryEntity.Position = town.Position;
+            infantryEntity.Velocity = new Vector2(0f, 0f);
+            infantryEntity.Midpoint = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
+            infantryEntity.Rotation = 0.0f;
+            infantryEntity.Offset = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
+            infantryEntity.SrcRectangle = new Rectangle(0, 0, infantryEntity.Texture.Width, infantryEntity.Texture.Height);
+            infantryEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
+                infantryEntity.SrcRectangle.Width, infantryEntity.SrcRectangle.Height);
+            infantryEntity.Game = game;
+            infantryEntity.PlayerOwned = playerOwned;
+            infantryEntity.EnemyOwned = !playerOwned;
+
+            // Set Properties in Dynamic Entity
+            infantryEntity.HitPoints = 100;
+            infantryEntity.Location = (NodeEntity)town;
+            infantryEntity.Destination = null;
+            infantryEntity.Moving = false;
+
+            return infantryEntity;
         }
     }
 }

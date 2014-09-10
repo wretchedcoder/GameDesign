@@ -14,8 +14,8 @@ namespace NobleQuest.Entity
         public enum Resources {WOOD, ORE, HAY};
         public Boolean StructurePresent { get; set; }
         public Resources Resource { get; set; }
-        public HashSet<PathEntity> LeftPaths { get; set; }
-        public HashSet<PathEntity> RightPaths { get; set; }
+        public List<PathEntity> LeftPaths { get; set; }
+        public List<PathEntity> RightPaths { get; set; }
         public PathEntity PreferredPathEntity { get; set; }
         public Boolean FortPresent { get; set; }
         public Fort Fort { get; set; }

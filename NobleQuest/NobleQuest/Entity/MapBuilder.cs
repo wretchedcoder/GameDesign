@@ -11,7 +11,7 @@ namespace NobleQuest.Entity
 {
     public class MapBuilder
     {
-        public List<GameEntity> BuildMap(Game game)
+        public List<GameEntity> BuildMap(NobleQuestGame game)
         {
             EntityFactory EntityFactory = new Entity.EntityFactory();
             
@@ -21,6 +21,7 @@ namespace NobleQuest.Entity
             GameEntity LastGameEntity = null;
 
             ThisGameEntity = EntityFactory.GetPlayerTown(game, new Vector2(100f, 200f));
+            game.PlayerCity = ThisGameEntity;
             GameEntityList.Add(ThisGameEntity);
             LastGameEntity = ThisGameEntity;
 
@@ -38,6 +39,7 @@ namespace NobleQuest.Entity
             LastGameEntity = ThisGameEntity;
 
             ThisGameEntity = EntityFactory.GetEnemyTown(game, new Vector2(300f, 200f));
+            game.EnemyCity = ThisGameEntity;
             GameEntityList.Add(ThisGameEntity);
             GameEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
 

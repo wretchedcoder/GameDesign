@@ -18,12 +18,21 @@ namespace NobleQuest
         public float Rotation { get; set; }
         public Vector2 Offset { get; set; }
         public Rectangle SrcRectangle { get; set; }
-        public Rectangle DestRectangle { get; set; }
+        private Rectangle destRectangle;
+        public Rectangle DestRectangle 
+        {
+            get { return destRectangle; }
+            set { destRectangle = value; }
+        }
         public Game Game { get; set; }
         public Boolean PlayerOwned { get; set; }
         public Boolean EnemyOwned { get; set; }
-
-        public GameEntity() { }
+        public Random RandomGenerator { get; set; }
+        
+        public GameEntity() 
+        {
+            RandomGenerator = new Random();
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -39,7 +48,7 @@ namespace NobleQuest
                 1.0f);
         }
 
-        public void Update()
+        public virtual void Update(GameTime gameTime)
         {
 
         }
