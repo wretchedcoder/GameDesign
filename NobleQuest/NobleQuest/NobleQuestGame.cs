@@ -21,8 +21,10 @@ namespace NobleQuest
         SpriteBatch SpriteBatch;
         List<GameEntity> GameEntityList;
         EntityFactory EntityFactory;
-        public GameEntity PlayerCity { get; set; }
-        public GameEntity EnemyCity { get; set; }
+        public GameEntity PlayerCity;
+        public GameEntity EnemyCity;
+
+        public float TimeCounter;
 
         public NobleQuestGame()
             : base()
@@ -77,8 +79,13 @@ namespace NobleQuest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
+
+            TimeCounter += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
             bool sIsPressed = Keyboard.GetState().IsKeyDown(Keys.S);
 
@@ -87,6 +94,7 @@ namespace NobleQuest
                 // TODO: Check for Blacksmith in Player Town
 
                 GameEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, true, this.PlayerCity));
+                GameEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, false, this.EnemyCity));
             }
 
             foreach (GameEntity gameEntity in GameEntityList)

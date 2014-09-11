@@ -15,7 +15,10 @@ namespace NobleQuest.Entity
         {
             if (this.Location.PreferredPathEntity == null)
             {
-                if (this.PlayerOwned)
+                if (this.PlayerOwned
+                    && this.Location.RightPaths != null
+                    && this.Location.RightPaths.Count != 0
+                    && !this.Moving)
                 {
                     int numPaths = this.Location.RightPaths.Count;
                     PathEntity Path = this.Location.RightPaths[RandomGenerator.Next(numPaths)];
@@ -24,18 +27,40 @@ namespace NobleQuest.Entity
                     double rotation = Math.Atan2(Path.RightNode.Position.Y - Path.LeftNode.Position.Y,
                         Path.RightNode.Position.X - Path.LeftNode.Position.X);
 
+                    this.Velocity = Vector2.Multiply(newVelocity, 0.001f); ;
+                    this.Rotation = (float)rotation;                    
+                    this.Destination = Path.RightNode;                    
+                    this.Moving = true;
+                }
+                else if (this.EnemyOwned
+                    && this.Location.LeftPaths != null
+                    && this.Location.LeftPaths.Count != 0
+                    && !this.Moving)
+                {
+                    int numPaths = this.Location.LeftPaths.Count;
+                    PathEntity Path = this.Location.LeftPaths[RandomGenerator.Next(numPaths)];
+                    Vector2 newVelocity = new Vector2(Path.LeftNode.Position.X - Path.RightNode.Position.X,
+                        Path.LeftNode.Position.Y - Path.RightNode.Position.Y);
+                    double rotation = Math.Atan2(Path.LeftNode.Position.Y - Path.RightNode.Position.Y,
+                        Path.LeftNode.Position.X - Path.RightNode.Position.X);
 
                     this.Velocity = Vector2.Multiply(newVelocity, 0.001f); ;
                     this.Rotation = (float)rotation;
-                    this.Position += this.Velocity;
-                    this.Destination = Path.RightNode;
-                    
-                }                
-            }
+                    this.Destination = Path.LeftNode;
+                    this.Moving = true;
+                }  
+            }            
+
+            this.Position += this.Velocity;
+            this.DestRectangle.X = (int)this.Position.X;
+            this.DestRectangle.Y = (int)this.Position.Y;
 
             if (this.DestRectangle.Intersects(this.Destination.DestRectangle))
             {
-
+                this.Position = this.Destination.Position;
+                this.Velocity = ZERO_VELOCITY;
+                this.Location = this.Destination;
+                this.Moving = false;
             }
         }
     }

@@ -7,9 +7,9 @@ namespace NobleQuest.Entity
 {
     class DynamicEntity : GameEntity
     {
-        public int HitPoints { get; set; }
-        public NodeEntity Location { get; set; }
-        public bool Moving { get; set; }
-        public NodeEntity Destination { get; set; }
+        public int HitPoints;
+        public NodeEntity Location;
+        public bool Moving;
+        public NodeEntity Destination;
     }
 }

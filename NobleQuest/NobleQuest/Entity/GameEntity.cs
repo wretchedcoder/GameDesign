@@ -11,23 +11,20 @@ namespace NobleQuest
 {
     public class GameEntity
     {
-        public Texture2D Texture { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 Velocity { get; set; }
-        public Vector2 Midpoint { get; set; }
-        public float Rotation { get; set; }
-        public Vector2 Offset { get; set; }
-        public Rectangle SrcRectangle { get; set; }
-        private Rectangle destRectangle;
-        public Rectangle DestRectangle 
-        {
-            get { return destRectangle; }
-            set { destRectangle = value; }
-        }
-        public Game Game { get; set; }
-        public Boolean PlayerOwned { get; set; }
-        public Boolean EnemyOwned { get; set; }
-        public Random RandomGenerator { get; set; }
+        public Texture2D Texture;
+        public Vector2 Position;
+        public Vector2 Velocity;
+        public Vector2 Midpoint;
+        public float Rotation;
+        public Vector2 Offset;
+        public Rectangle SrcRectangle;
+        public Rectangle DestRectangle;
+        public Game Game;
+        public Boolean PlayerOwned;
+        public Boolean EnemyOwned;
+        public Random RandomGenerator;
+
+        public static Vector2 ZERO_VELOCITY = new Vector2(0f, 0f);
         
         public GameEntity() 
         {

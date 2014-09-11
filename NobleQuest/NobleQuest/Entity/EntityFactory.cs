@@ -25,7 +25,6 @@ namespace NobleQuest.Entity
             town.Velocity = new Vector2(0f, 0f);
             town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
             town.Rotation = 0.0f;
-            town.Offset = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
             town.SrcRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
             town.DestRectangle = new Rectangle((int)position.X, (int)position.Y, 
                 town.SrcRectangle.Width, town.SrcRectangle.Height);
@@ -55,7 +54,6 @@ namespace NobleQuest.Entity
             town.Velocity = new Vector2(0f, 0f);
             town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
             town.Rotation = 0.0f;
-            town.Offset = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
             town.SrcRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
             town.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
                 town.SrcRectangle.Width, town.SrcRectangle.Height);
@@ -89,7 +87,6 @@ namespace NobleQuest.Entity
             // pathEntity.Midpoint = new Vector2(pathEntity.Texture.Width / 2, pathEntity.Texture.Height / 2);
             pathEntity.Midpoint = new Vector2(0f, pathEntity.Texture.Height / 2);
             pathEntity.Rotation = (float)rotation;
-            pathEntity.Offset = new Vector2(0f, 0f);
             pathEntity.SrcRectangle = new Rectangle(0,0,(int)nodeDistance,pathEntity.Texture.Height);
             pathEntity.DestRectangle = new Rectangle((int)pathEntity.Position.X, (int)pathEntity.Position.Y,
                 pathEntity.SrcRectangle.Width, pathEntity.SrcRectangle.Height);
@@ -123,7 +120,6 @@ namespace NobleQuest.Entity
             grassNode.Velocity = new Vector2(0f, 0f);
             grassNode.Midpoint = new Vector2(grassNode.Texture.Width / 2, grassNode.Texture.Height / 2);
             grassNode.Rotation = 0.0f;
-            grassNode.Offset = new Vector2(grassNode.Texture.Width / 2, grassNode.Texture.Height / 2);
             grassNode.SrcRectangle = new Rectangle(0, 0, grassNode.Texture.Width, grassNode.Texture.Height);
             grassNode.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
                 grassNode.SrcRectangle.Width, grassNode.SrcRectangle.Height);
@@ -134,7 +130,7 @@ namespace NobleQuest.Entity
             grassNode.StructurePresent = true;
             grassNode.Resource = NodeEntity.Resources.HAY;
             grassNode.LeftPaths = new List<PathEntity>();
-            grassNode.RightPaths = null;
+            grassNode.RightPaths = new List<PathEntity>();
             grassNode.PreferredPathEntity = null;
             grassNode.FortPresent = false;
             grassNode.Fort = null;
@@ -151,7 +147,6 @@ namespace NobleQuest.Entity
             infantryEntity.Velocity = new Vector2(0f, 0f);
             infantryEntity.Midpoint = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
             infantryEntity.Rotation = 0.0f;
-            infantryEntity.Offset = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
             infantryEntity.SrcRectangle = new Rectangle(0, 0, infantryEntity.Texture.Width, infantryEntity.Texture.Height);
             infantryEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
                 infantryEntity.SrcRectangle.Width, infantryEntity.SrcRectangle.Height);
