@@ -11,42 +11,39 @@ namespace NobleQuest.Entity
 {
     public class MapBuilder
     {
-        public List<GameEntity> BuildMap(NobleQuestGame game)
+        public void BuildMap(NobleQuestGame game)
         {
             EntityFactory EntityFactory = new Entity.EntityFactory();
-            
 
-            List<GameEntity> GameEntityList = new List<GameEntity>();
             GameEntity ThisGameEntity = null;
             GameEntity LastGameEntity = null;
 
             ThisGameEntity = EntityFactory.GetPlayerTown(game, new Vector2(100f, 200f));
             game.PlayerCity = ThisGameEntity;
-            GameEntityList.Add(ThisGameEntity);
+            game.NodeEntityList.Add((NodeEntity)ThisGameEntity);
             LastGameEntity = ThisGameEntity;
 
             ThisGameEntity = EntityFactory.GetGrassNode(game, new Vector2(200f, 100f));
-            GameEntityList.Add(ThisGameEntity);
-            GameEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
+            game.NodeEntityList.Add((NodeEntity)ThisGameEntity);
+            game.PathEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
 
             ThisGameEntity = EntityFactory.GetGrassNode(game, new Vector2(200f, 200f));
-            GameEntityList.Add(ThisGameEntity);
-            GameEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
+            game.NodeEntityList.Add((NodeEntity)ThisGameEntity);
+            game.PathEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
 
             ThisGameEntity = EntityFactory.GetGrassNode(game, new Vector2(200f, 300f));
-            GameEntityList.Add(ThisGameEntity);
-            GameEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
+            game.NodeEntityList.Add((NodeEntity)ThisGameEntity);
+            game.PathEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
             LastGameEntity = ThisGameEntity;
 
             ThisGameEntity = EntityFactory.GetEnemyTown(game, new Vector2(300f, 200f));
             game.EnemyCity = ThisGameEntity;
-            GameEntityList.Add(ThisGameEntity);
-            GameEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
+            game.NodeEntityList.Add((NodeEntity)ThisGameEntity);
+            game.PathEntityList.Add(EntityFactory.GetPathEntity(game, (NodeEntity)LastGameEntity, (NodeEntity)ThisGameEntity));
+                   
+
 
             
-
-
-            return GameEntityList;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NobleQuest.Entity
 {
-    class DynamicEntity : GameEntity
+    public class DynamicEntity : GameEntity
     {
         public int HitPoints;
         public NodeEntity Location;

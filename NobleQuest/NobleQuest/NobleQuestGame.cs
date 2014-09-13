@@ -17,10 +17,13 @@ namespace NobleQuest
     /// </summary>
     public class NobleQuestGame : Game
     {
-        GraphicsDeviceManager Graphics;
-        SpriteBatch SpriteBatch;
-        List<GameEntity> GameEntityList;
-        EntityFactory EntityFactory;
+        public GraphicsDeviceManager Graphics;
+        public SpriteBatch SpriteBatch;
+        public List<GameEntity> GameEntityList;
+        public List<NodeEntity> NodeEntityList;
+        public List<PathEntity> PathEntityList;
+        public List<DynamicEntity> DynamicEntityList;
+        public EntityFactory EntityFactory;
         public GameEntity PlayerCity;
         public GameEntity EnemyCity;
 
@@ -32,7 +35,10 @@ namespace NobleQuest
             Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             GameEntityList = new List<GameEntity>();
-            EntityFactory = new EntityFactory();
+            NodeEntityList = new List<NodeEntity>();
+            PathEntityList = new List<PathEntity>();
+            DynamicEntityList = new List<DynamicEntity>();
+            this.EntityFactory = new EntityFactory();
         }
 
         /// <summary>
@@ -45,7 +51,7 @@ namespace NobleQuest
         {
             MapBuilder MapBuilder = new MapBuilder();
 
-            GameEntityList.AddRange(MapBuilder.BuildMap(this));
+            MapBuilder.BuildMap(this);
 
             base.Initialize();
         }
@@ -93,13 +99,21 @@ namespace NobleQuest
             {
                 // TODO: Check for Blacksmith in Player Town
 
-                GameEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, true, this.PlayerCity));
-                GameEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, false, this.EnemyCity));
+                DynamicEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, true, this.PlayerCity));
+                DynamicEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, false, this.EnemyCity));
             }
 
-            foreach (GameEntity gameEntity in GameEntityList)
+            for (int i = PathEntityList.Count - 1; i >= 0; i--)
             {
-                gameEntity.Update(gameTime);
+                PathEntityList[i].Update(gameTime);
+            }
+            for (int i = NodeEntityList.Count - 1; i >= 0; i--)
+            {
+                NodeEntityList[i].Update(gameTime);
+            }
+            for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
+            {
+                DynamicEntityList[i].Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -114,9 +128,17 @@ namespace NobleQuest
             GraphicsDevice.Clear(Color.Ivory);
 
             this.SpriteBatch.Begin();
-            for (int i = GameEntityList.Count - 1; i >= 0; i-- )
+            for (int i = PathEntityList.Count - 1; i >= 0; i-- )
             {
-                GameEntityList[i].Draw(this.SpriteBatch);
+                PathEntityList[i].Draw(this.SpriteBatch);
+            }
+            for (int i = NodeEntityList.Count - 1; i >= 0; i--)
+            {
+                NodeEntityList[i].Draw(this.SpriteBatch);
+            }
+            for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
+            {
+                DynamicEntityList[i].Draw(this.SpriteBatch);
             }
             this.SpriteBatch.End();
 

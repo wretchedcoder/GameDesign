@@ -16,18 +16,18 @@ namespace NobleQuest.Entity
 
         }
 
-        public GameEntity GetPlayerTown(Game game, Vector2 position)
+        public NodeEntity GetPlayerTown(Game game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             TownNode town = new TownNode();            
             town.Texture = game.Content.Load<Texture2D>("PlayerCity");
             town.Position = position;
             town.Velocity = new Vector2(0f, 0f);
-            town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
+            town.Midpoint = new Vector2(town.Texture.Width / 2.0f, town.Texture.Height / 2.0f);
             town.Rotation = 0.0f;
             town.SrcRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
-            town.DestRectangle = new Rectangle((int)position.X, (int)position.Y, 
-                town.SrcRectangle.Width, town.SrcRectangle.Height);
+            town.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
+                town.Texture.Width, town.Texture.Height);
             town.Game = game;
             town.PlayerOwned = true;
             town.EnemyOwned = false;
@@ -45,7 +45,7 @@ namespace NobleQuest.Entity
             return town;
         }
 
-        public GameEntity GetEnemyTown(Game game, Vector2 position)
+        public NodeEntity GetEnemyTown(Game game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             TownNode town = new TownNode();
@@ -73,7 +73,7 @@ namespace NobleQuest.Entity
             return town;
         }
 
-        public GameEntity GetPathEntity(Game game, NodeEntity leftNode, NodeEntity rightNode)
+        public PathEntity GetPathEntity(Game game, NodeEntity leftNode, NodeEntity rightNode)
         {
             // Get Distance Between Nodes
             float nodeDistance = Vector2.Distance(leftNode.Position, rightNode.Position);
@@ -111,7 +111,7 @@ namespace NobleQuest.Entity
             return pathEntity;
         }
 
-        public GameEntity GetGrassNode(Game game, Vector2 position)
+        public NodeEntity GetGrassNode(Game game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             NodeEntity grassNode = new NodeEntity();
@@ -138,7 +138,7 @@ namespace NobleQuest.Entity
             return grassNode;
         }
 
-        public GameEntity GetInfantryEntity(Game game, bool playerOwned, GameEntity town)
+        public DynamicEntity GetInfantryEntity(Game game, bool playerOwned, GameEntity town)
         {
             // Instantiate and Set Properties in GameEntity
             InfantryEntity infantryEntity = new InfantryEntity();
