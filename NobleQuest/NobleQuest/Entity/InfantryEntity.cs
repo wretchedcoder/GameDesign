@@ -53,15 +53,63 @@ namespace NobleQuest.Entity
 
             this.Position += this.Velocity;
             this.DestRectangle.X = (int)this.Position.X;
-            this.DestRectangle.Y = (int)this.Position.Y;
+            this.DestRectangle.Y = (int)this.Position.Y;  
+        }
 
-            if (this.DestRectangle.Intersects(this.Destination.DestRectangle))
+        public override void HandleCollision(DynamicEntity dynamic)
+        {
+            if (this.PlayerOwned)
             {
-                this.Position = this.Destination.Position;
-                this.Velocity = ZERO_VELOCITY;
-                this.Location = this.Destination;
-                this.Moving = false;
+                if (dynamic.PlayerOwned)
+                {
+                    // No Action
+                }
+                else
+                {
+                    // Attack DynamicEntity
+                }
+            }
+            else
+            {
+                if (dynamic.PlayerOwned)
+                {
+                    // Attack DynamicEntity
+                }
+                else
+                {
+                    // No Action
+                }
             }
         }
-    }
+
+        public override void HandleCollision(NodeEntity node)
+        {
+            if (this.PlayerOwned)
+            {
+                if (node.PlayerOwned)
+                {
+                    // Check Wait Flag
+                }
+                else
+                {
+                    // Check Fort
+                    // Attack Fort if Present
+                    // Claim for Player if not
+                }
+            }
+            else 
+            {
+                if (node.PlayerOwned)
+                {
+                    // Check Fort
+                    // Attack Fort if Present
+                    // Claim for Player if not
+                }
+                else
+                {
+                    // Check Wait Flag
+                }
+            }
+        }
+    } // End of InfantryEntity Class
 }

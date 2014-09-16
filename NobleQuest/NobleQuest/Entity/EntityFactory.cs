@@ -35,10 +35,12 @@ namespace NobleQuest.Entity
             // Set Properties in ResourceEntity
             resource.IsVisible = visible;
             resource.SpriteFont = game.SpriteFont;
-            resource.Gold = 10;
+            resource.Gold = 200;
             resource.Laborers = 1;
             resource.PopulationLimit = 1;
             resource.CurrentPopulation = 1;
+            resource.HasBlacksmith = false;
+
             
 
             return resource;
@@ -65,6 +67,7 @@ namespace NobleQuest.Entity
             town.LeftPaths = null;
             town.RightPaths = new List<PathEntity>();
             town.PreferredPathEntity = null;
+            town.HasFort = true;
 
             // Set Properties in TownNode
                        
@@ -92,6 +95,7 @@ namespace NobleQuest.Entity
             town.LeftPaths = new List<PathEntity>();
             town.RightPaths = null;
             town.PreferredPathEntity = null;
+            town.HasFort = true;
 
             // Set Properties in TownNode
 
@@ -163,7 +167,7 @@ namespace NobleQuest.Entity
             return grassNode;
         }
 
-        public DynamicEntity GetInfantryEntity(Game game, bool playerOwned, GameEntity town)
+        public DynamicEntity GetInfantryEntity(NobleQuestGame game, bool playerOwned, GameEntity town)
         {
             // Instantiate and Set Properties in GameEntity
             InfantryEntity infantryEntity = new InfantryEntity();
@@ -184,6 +188,8 @@ namespace NobleQuest.Entity
             infantryEntity.Location = (NodeEntity)town;
             infantryEntity.Destination = null;
             infantryEntity.Moving = false;
+
+            game.DynamicEntityList.Add(infantryEntity);
 
             return infantryEntity;
         }

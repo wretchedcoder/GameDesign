@@ -126,6 +126,25 @@ namespace NobleQuest
                 DynamicEntityList[i].Update(gameTime);
             }
 
+            // Check for Dynamic Entity Collisions
+            foreach(DynamicEntity dynamicEntity in DynamicEntityList)
+            {
+                foreach(NodeEntity nodeEntity in NodeEntityList)
+                {
+                    if (dynamicEntity.DestRectangle.Intersects(nodeEntity.DestRectangle))
+                    {
+                        dynamicEntity.HandleCollision(nodeEntity);
+                    }
+                }
+                foreach(DynamicEntity otherDynEntity in DynamicEntityList)
+                {
+                    if (dynamicEntity.DestRectangle.Intersects(otherDynEntity.DestRectangle))
+                    {
+                        dynamicEntity.HandleCollision(otherDynEntity);
+                    }
+                }
+            }
+
             base.Update(gameTime);
         }
 

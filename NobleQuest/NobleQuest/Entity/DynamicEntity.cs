@@ -11,5 +11,9 @@ namespace NobleQuest.Entity
         public NodeEntity Location;
         public bool Moving;
         public NodeEntity Destination;
+
+        public virtual void HandleCollision(NodeEntity node) { }
+
+        public virtual void HandleCollision(DynamicEntity dynamic) { }
     }
 }

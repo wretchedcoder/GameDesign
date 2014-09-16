@@ -12,7 +12,7 @@ namespace NobleQuest.Entity
     public class ResourceEntity : GameEntity
     {
         public bool IsVisible;
-        public int Gold = 10;
+        public int Gold = 200;
         public int CurrentPopulation = 0;
         public int PopulationLimit = 0;
         public int Laborers = 0;
@@ -25,7 +25,7 @@ namespace NobleQuest.Entity
         public bool HasArmory = false;
 
         public float TimeElapsed = 0.0f;
-        public float Delay = 30.0f;
+        public float Delay = 5.0f;
 
         public SpriteFont SpriteFont;
         
