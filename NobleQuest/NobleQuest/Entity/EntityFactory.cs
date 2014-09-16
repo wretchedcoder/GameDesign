@@ -39,14 +39,12 @@ namespace NobleQuest.Entity
             resource.Laborers = 1;
             resource.PopulationLimit = 1;
             resource.CurrentPopulation = 1;
-            resource.HasBlacksmith = false;
-
-            
+            resource.HasBlacksmith = false;           
 
             return resource;
         }
 
-        public NodeEntity GetPlayerTown(Game game, Vector2 position)
+        public NodeEntity GetPlayerTown(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             TownNode town = new TownNode();            
@@ -68,6 +66,7 @@ namespace NobleQuest.Entity
             town.RightPaths = new List<PathEntity>();
             town.PreferredPathEntity = null;
             town.HasFort = true;
+            town.isTown = true;
 
             // Set Properties in TownNode
                        
@@ -75,7 +74,7 @@ namespace NobleQuest.Entity
             return town;
         }
 
-        public NodeEntity GetEnemyTown(Game game, Vector2 position)
+        public NodeEntity GetEnemyTown(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             TownNode town = new TownNode();
@@ -89,6 +88,7 @@ namespace NobleQuest.Entity
                 town.SrcRectangle.Width, town.SrcRectangle.Height);
             town.Game = game;
             town.PlayerOwned = false;
+            town.EnemyOwned = true;
 
             // Set Properties in NodeEntity
             town.HasResourceStructure = true;
@@ -96,6 +96,7 @@ namespace NobleQuest.Entity
             town.RightPaths = null;
             town.PreferredPathEntity = null;
             town.HasFort = true;
+            town.isTown = true;
 
             // Set Properties in TownNode
 
@@ -103,7 +104,7 @@ namespace NobleQuest.Entity
             return town;
         }
 
-        public PathEntity GetPathEntity(Game game, NodeEntity leftNode, NodeEntity rightNode)
+        public PathEntity GetPathEntity(NobleQuestGame game, NodeEntity leftNode, NodeEntity rightNode)
         {
             // Get Distance Between Nodes
             float nodeDistance = Vector2.Distance(leftNode.Position, rightNode.Position);
@@ -141,7 +142,7 @@ namespace NobleQuest.Entity
             return pathEntity;
         }
 
-        public NodeEntity GetGrassNode(Game game, Vector2 position)
+        public NodeEntity GetGrassNode(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             NodeEntity grassNode = new NodeEntity();
@@ -163,6 +164,7 @@ namespace NobleQuest.Entity
             grassNode.PreferredPathEntity = null;
             grassNode.HasFort = false;
             grassNode.Fort = null;
+            grassNode.isTown = false;
 
             return grassNode;
         }
@@ -171,7 +173,14 @@ namespace NobleQuest.Entity
         {
             // Instantiate and Set Properties in GameEntity
             InfantryEntity infantryEntity = new InfantryEntity();
-            infantryEntity.Texture = game.Content.Load<Texture2D>("PlayerInfantry");
+            if (playerOwned)
+            {
+                infantryEntity.Texture = game.Content.Load<Texture2D>("PlayerInfantry");
+            }
+            else
+            {
+                infantryEntity.Texture = game.Content.Load<Texture2D>("EnemyInfantry");
+            }            
             infantryEntity.Position = town.Position;
             infantryEntity.Velocity = new Vector2(0f, 0f);
             infantryEntity.Midpoint = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
@@ -188,10 +197,53 @@ namespace NobleQuest.Entity
             infantryEntity.Location = (NodeEntity)town;
             infantryEntity.Destination = null;
             infantryEntity.Moving = false;
+            if (playerOwned)
+            {
+                infantryEntity.Direction = infantryEntity.RIGHT;
+            }
+            else
+            {
+                infantryEntity.Direction = infantryEntity.LEFT;
+            }
 
             game.DynamicEntityList.Add(infantryEntity);
 
             return infantryEntity;
+        } // Get Infantry Entity
+
+        public WorkerEntity GetWorkerEntity(NobleQuestGame game, bool playerOwned, TownNode town)
+        {
+            // Instantiate and Set Properties in GameEntity
+            WorkerEntity workerEntity = new WorkerEntity();
+            workerEntity.Texture = game.Content.Load<Texture2D>("Worker");
+            workerEntity.Position = town.Position;
+            workerEntity.Velocity = new Vector2(0f, 0f);
+            workerEntity.Midpoint = new Vector2(workerEntity.Texture.Width / 2, workerEntity.Texture.Height / 2);
+            workerEntity.Rotation = 0.0f;
+            workerEntity.SrcRectangle = new Rectangle(0, 0, workerEntity.Texture.Width, workerEntity.Texture.Height);
+            workerEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
+                workerEntity.SrcRectangle.Width, workerEntity.SrcRectangle.Height);
+            workerEntity.Game = game;
+            workerEntity.PlayerOwned = playerOwned;
+            workerEntity.EnemyOwned = !playerOwned;
+
+            // Set Properties in Dynamic Entity
+            workerEntity.HitPoints = 100;
+            workerEntity.Location = (NodeEntity)town;
+            workerEntity.Destination = null;
+            workerEntity.Moving = false;
+            if (playerOwned)
+            {
+                workerEntity.Direction = workerEntity.RIGHT;
+            }
+            else
+            {
+                workerEntity.Direction = workerEntity.LEFT;
+            }
+
+            game.DynamicEntityList.Add(workerEntity);
+
+            return workerEntity;
         }
     }
 }

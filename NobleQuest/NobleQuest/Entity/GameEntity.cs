@@ -19,7 +19,7 @@ namespace NobleQuest
         public Vector2 Offset;
         public Rectangle SrcRectangle;
         public Rectangle DestRectangle;
-        public Game Game;
+        public NobleQuestGame Game;
         public Boolean PlayerOwned;
         public Boolean EnemyOwned;
         public Random RandomGenerator;

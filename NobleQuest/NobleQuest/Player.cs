@@ -21,25 +21,20 @@ namespace NobleQuest
 
         public float currentTime = 0.0f;
 
-        public float farmLastPressed = 0.0f;
-        public float sinceFarmPressed = 0.0f;
+        public float farmTime = 0.0f;
         public float farmCooldown = 10.0f;
 
-        public float infantryLastPressed = 0.0f;
-        public float sinceInfantryPressed = 0.0f;
+        public float infantryTime = 0.0f;
         public float infantryCooldown = 10.0f;
 
-        public float archerLastPressed = 0.0f;
-        public float sinceArcherPressed = 0.0f;
+        public float archerTime = 0.0f;
         public float archerCooldown = 10.0f;
 
-        public float knightLastPressed = 0.0f;
-        public float sinceKnightPressed = 0.0f;
+        public float knightTime = 0.0f;
         public float knightCooldown = 10.0f;
 
-        public float laborerLastPressed = 0.0f;
-        public float sinceLaborerPressed = 0.0f;
-        public float laborerCooldown = 10.0f;
+        public float workerTime = 0.0f;
+        public float workerCooldown = 0.0f;
 
         public Player()
         {
@@ -48,27 +43,26 @@ namespace NobleQuest
 
         public void Update(GameTime gameTime)
         {
-            currentTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            currentTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
             #region Farm (A)
             bool aIsPressed = Keyboard.GetState().IsKeyDown(Keys.A);
-            sinceFarmPressed = currentTime - farmLastPressed;
+            farmTime += currentTime;
             if (aIsPressed 
                 && this.Resources.Gold >= 10
-                && sinceFarmPressed >= farmCooldown)
+                && farmTime >= farmCooldown)
             {
                 this.Resources.Gold -= 10;
-                sinceFarmPressed = 0.0f;
+                farmTime -= farmCooldown;
                 Game.Player.Resources.PopulationLimit++;
-                farmLastPressed = currentTime;
             }
             #endregion Farm (A)
 
             #region Infantry (S)
             bool sIsPressed = Keyboard.GetState().IsKeyDown(Keys.S);
-            sinceInfantryPressed = currentTime - infantryLastPressed;
+            infantryTime += currentTime;
             if (sIsPressed
-                && sinceInfantryPressed >= infantryCooldown)
+                && infantryTime >= infantryCooldown)
             {
                 if (this.Resources.Gold >= 50)
                 {
@@ -77,8 +71,7 @@ namespace NobleQuest
                         if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
                         {
                             this.Resources.Gold -= 50;
-                            sinceInfantryPressed = 0.0f;
-                            infantryLastPressed = currentTime;
+                            infantryTime -= infantryCooldown;
                             this.Resources.Infantry++;
                             this.Resources.CurrentPopulation++;
 
@@ -92,8 +85,7 @@ namespace NobleQuest
                     else
                     {
                         this.Resources.Gold -= 50;
-                        sinceInfantryPressed = 0.0f;
-                        infantryLastPressed = currentTime;
+                        infantryTime -= infantryCooldown;
                         this.Resources.HasBlacksmith = true;
                     }
                 }
@@ -106,9 +98,9 @@ namespace NobleQuest
 
             #region Archer (D)
             bool dIsPressed = Keyboard.GetState().IsKeyDown(Keys.D);
-            sinceArcherPressed = currentTime - archerLastPressed;
+            archerTime += currentTime;
             if (dIsPressed
-                && sinceArcherPressed >= archerCooldown)
+                && archerTime >= archerCooldown)
             {
                 if (this.Resources.Gold >= 50)
                 {
@@ -117,8 +109,7 @@ namespace NobleQuest
                         if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
                         {
                             this.Resources.Gold -= 50;
-                            sinceArcherPressed = 0.0f;
-                            archerLastPressed = currentTime;
+                            archerTime -= archerCooldown;
                             this.Resources.Archer++;
                             this.Resources.CurrentPopulation++;
 
@@ -132,8 +123,7 @@ namespace NobleQuest
                     else
                     {
                         this.Resources.Gold -= 50;
-                        sinceArcherPressed = 0.0f;
-                        archerLastPressed = currentTime;
+                        archerTime -= archerCooldown;
                         this.Resources.HasFletchery = true;
                     }
                 }
@@ -146,9 +136,9 @@ namespace NobleQuest
 
             #region Knight (F)
             bool fIsPressed = Keyboard.GetState().IsKeyDown(Keys.F);
-            sinceKnightPressed = currentTime - knightLastPressed;
+            knightTime += currentTime;
             if (fIsPressed
-                && sinceKnightPressed >= knightCooldown)
+                && knightTime >= knightCooldown)
             {
                 if (this.Resources.Gold >= 50)
                 {
@@ -157,8 +147,7 @@ namespace NobleQuest
                         if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
                         {
                             this.Resources.Gold -= 50;
-                            sinceKnightPressed = 0.0f;
-                            knightLastPressed = currentTime;
+                            knightTime -= knightCooldown;
                             this.Resources.Knight++;
                             this.Resources.CurrentPopulation++;
 
@@ -172,8 +161,7 @@ namespace NobleQuest
                     else
                     {
                         this.Resources.Gold -= 50;
-                        sinceKnightPressed = 0.0f;
-                        knightLastPressed = currentTime;
+                        knightTime -= knightCooldown;
                         this.Resources.HasArmory = true;
                     }
                 }
@@ -200,40 +188,25 @@ namespace NobleQuest
 
             #region Laborer (R)
             bool rIsPressed = Keyboard.GetState().IsKeyDown(Keys.R);
-            sinceLaborerPressed = currentTime - laborerLastPressed;
+            workerTime += currentTime;
             if (rIsPressed
-                && sinceLaborerPressed >= laborerCooldown)
+                && workerTime >= workerCooldown)
             {
                 if (this.Resources.Gold >= 50)
                 {
-                    if (this.SelectedNode != null)
+                    if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
                     {
-                        if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
-                        {
-                            if (this.SelectedNode.HasResourceStructure)
-                            {
-                                
-                            }
-                            else
-                            { 
-                                this.Resources.Gold -= 50;
-                                sinceLaborerPressed = 0.0f;
-                                laborerLastPressed = currentTime;
-                                this.Resources.Laborers++;
-                                this.Resources.CurrentPopulation++;
-                                this.SelectedNode.HasResourceStructure = true;
-                            }
-                        }
-                        else
-                        {
-                            // TODO: Put Message about population exceed
-                        }
+                        this.Resources.Gold -= 50;
+                        workerTime -= workerCooldown;
+                        this.Resources.Laborers++;
+                        this.Resources.CurrentPopulation++;
+                        this.Game.DynamicEntityList.Add(EntityFactory.GetWorkerEntity(this.Game, true, this.Town));
                     }
                     else
                     {
-                        // Put message about no selected node
+                        // TODO: Put Message about population exceed
                     }
-                }
+                }                
                 else
                 {
                     // TODO: Put Message About Insufficient Gold Here

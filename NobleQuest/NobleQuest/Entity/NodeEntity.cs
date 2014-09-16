@@ -18,5 +18,6 @@ namespace NobleQuest.Entity
         public List<PathEntity> RightPaths;
         public PathEntity PreferredPathEntity;
         public Fort Fort;
+        public bool isTown;
     }
 }

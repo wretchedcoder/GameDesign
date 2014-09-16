@@ -50,6 +50,7 @@ namespace NobleQuest
             this.Player = new Player();
             this.Player.Game = this;
             this.Enemy = new Enemy();
+            this.Enemy.Game = this;
 
             
         }
@@ -110,7 +111,7 @@ namespace NobleQuest
             TimeCounter += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
             this.Player.Update(gameTime);
-            // this.Enemy.Update(gameTime);
+            this.Enemy.Update(gameTime);
             this.Player.Resources.Update(gameTime);
             this.Enemy.Resources.Update(gameTime);
             for (int i = PathEntityList.Count - 1; i >= 0; i--)
@@ -127,17 +128,28 @@ namespace NobleQuest
             }
 
             // Check for Dynamic Entity Collisions
-            foreach(DynamicEntity dynamicEntity in DynamicEntityList)
+            for (int i = DynamicEntityList.Count - 1; i >= 0; i-- )
             {
-                foreach(NodeEntity nodeEntity in NodeEntityList)
+                DynamicEntity dynamicEntity = DynamicEntityList[i];
+                if (dynamicEntity.DestRectangle.Intersects(Player.Town.DestRectangle))
                 {
+                    dynamicEntity.HandleCollision(Player.Town);
+                }
+                else if (dynamicEntity.DestRectangle.Intersects(Enemy.Town.DestRectangle))
+                {
+                    dynamicEntity.HandleCollision(Enemy.Town);
+                }
+                for (int j = NodeEntityList.Count - 1; j >= 0; j-- )
+                {
+                    NodeEntity nodeEntity = NodeEntityList[j];
                     if (dynamicEntity.DestRectangle.Intersects(nodeEntity.DestRectangle))
                     {
                         dynamicEntity.HandleCollision(nodeEntity);
                     }
                 }
-                foreach(DynamicEntity otherDynEntity in DynamicEntityList)
+                for (int j = DynamicEntityList.Count - 1; j >= 0; j--)
                 {
+                    DynamicEntity otherDynEntity = DynamicEntityList[j];
                     if (dynamicEntity.DestRectangle.Intersects(otherDynEntity.DestRectangle))
                     {
                         dynamicEntity.HandleCollision(otherDynEntity);

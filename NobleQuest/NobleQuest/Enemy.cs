@@ -12,10 +12,32 @@ namespace NobleQuest
 {
     public class Enemy
     {
+        public EntityFactory EntityFactory;
+
+        public NobleQuestGame Game;
         public TownNode Town;
         public ResourceEntity Resources;
         public bool HasBlacksmith = false;
         public bool HasFletchery = false;
         public bool HasArmory = false;
+
+        public float infantryTime = 0.0f;
+        public float infantryDelay = 10.0f;
+
+        public Enemy()
+        {
+            EntityFactory = new EntityFactory();
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            infantryTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            if (infantryTime > infantryDelay)
+            {
+                infantryTime -= infantryDelay;
+                this.Game.EntityFactory.GetInfantryEntity(this.Game, false, this.Town);
+            }
+            
+        }
     }
 }

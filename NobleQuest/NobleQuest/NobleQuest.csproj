@@ -46,6 +46,7 @@
     <Compile Include="Entity\PathEntity.cs" />
     <Compile Include="Entity\ResourceEntity.cs" />
     <Compile Include="Entity\TownNode.cs" />
+    <Compile Include="Entity\WorkerEntity.cs" />
     <Compile Include="NobleQuestGame.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
@@ -65,6 +66,9 @@
     <Content Include="Content\EnemyCity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\EnemyInfantry.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\GrassNode.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -78,6 +82,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ResourceBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Worker.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
