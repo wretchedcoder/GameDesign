@@ -8,15 +8,14 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using NobleQuest.Entity;
 
-namespace NobleQuest.Entity
+namespace NobleQuest
 {
-    public class NodeEntity : GameEntity
+    public class Enemy
     {
-        public bool HasResourceStructure;
-        public bool HasFort;
-        public List<PathEntity> LeftPaths;
-        public List<PathEntity> RightPaths;
-        public PathEntity PreferredPathEntity;
-        public Fort Fort;
+        public TownNode Town;
+        public ResourceEntity Resources;
+        public bool HasBlacksmith = false;
+        public bool HasFletchery = false;
+        public bool HasArmory = false;
     }
 }

@@ -35,6 +35,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Enemy.cs" />
     <Compile Include="Entity\DynamicEntity.cs" />
     <Compile Include="Entity\EntityFactory.cs" />
     <Compile Include="Entity\Fort.cs" />
@@ -43,8 +44,10 @@
     <Compile Include="Entity\MapBuilder.cs" />
     <Compile Include="Entity\NodeEntity.cs" />
     <Compile Include="Entity\PathEntity.cs" />
+    <Compile Include="Entity\ResourceEntity.cs" />
     <Compile Include="Entity\TownNode.cs" />
     <Compile Include="NobleQuestGame.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\BlockBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\EnemyCity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -71,9 +77,16 @@
     <Content Include="Content\PlayerInfantry.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\ResourceBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Content\Arial.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

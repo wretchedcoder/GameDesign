@@ -31,7 +31,7 @@ namespace NobleQuest
             RandomGenerator = new Random();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 this.Texture,

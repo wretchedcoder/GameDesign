@@ -24,21 +24,34 @@ namespace NobleQuest
         public List<PathEntity> PathEntityList;
         public List<DynamicEntity> DynamicEntityList;
         public EntityFactory EntityFactory;
-        public GameEntity PlayerCity;
-        public GameEntity EnemyCity;
+        public Player Player;
+        public Enemy Enemy;
 
         public float TimeCounter;
+
+        public SpriteFont SpriteFont;
+        public static Texture2D BlockBar;
 
         public NobleQuestGame()
             : base()
         {
+            base.IsMouseVisible = true;
             Graphics = new GraphicsDeviceManager(this);
+            Graphics.PreferredBackBufferHeight = 600;
+            Graphics.PreferredBackBufferWidth = 800;
+            Graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             GameEntityList = new List<GameEntity>();
             NodeEntityList = new List<NodeEntity>();
             PathEntityList = new List<PathEntity>();
             DynamicEntityList = new List<DynamicEntity>();
             this.EntityFactory = new EntityFactory();
+            this.Player = new Player();
+            this.Player.Game = this;
+            this.Enemy = new Enemy();
+
+            
         }
 
         /// <summary>
@@ -49,6 +62,8 @@ namespace NobleQuest
         /// </summary>
         protected override void Initialize()
         {
+            SpriteFont = Content.Load<SpriteFont>("Arial");
+            BlockBar = Content.Load<Texture2D>("BlockBar");
             MapBuilder MapBuilder = new MapBuilder();
 
             MapBuilder.BuildMap(this);
@@ -64,6 +79,7 @@ namespace NobleQuest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+            
 
             // TODO: use this.Content to load your game content here
             
@@ -93,16 +109,10 @@ namespace NobleQuest
 
             TimeCounter += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
-            bool sIsPressed = Keyboard.GetState().IsKeyDown(Keys.S);
-
-            if (sIsPressed)
-            {
-                // TODO: Check for Blacksmith in Player Town
-
-                DynamicEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, true, this.PlayerCity));
-                DynamicEntityList.Insert(0, EntityFactory.GetInfantryEntity(this, false, this.EnemyCity));
-            }
-
+            this.Player.Update(gameTime);
+            // this.Enemy.Update(gameTime);
+            this.Player.Resources.Update(gameTime);
+            this.Enemy.Resources.Update(gameTime);
             for (int i = PathEntityList.Count - 1; i >= 0; i--)
             {
                 PathEntityList[i].Update(gameTime);
@@ -128,6 +138,8 @@ namespace NobleQuest
             GraphicsDevice.Clear(Color.Ivory);
 
             this.SpriteBatch.Begin();
+            this.Player.Resources.Draw(this.SpriteBatch);
+            // this.Enemy.Resources.Draw(this.SpriteBatch);
             for (int i = PathEntityList.Count - 1; i >= 0; i-- )
             {
                 PathEntityList[i].Draw(this.SpriteBatch);

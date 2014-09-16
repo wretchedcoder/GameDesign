@@ -16,6 +16,34 @@ namespace NobleQuest.Entity
 
         }
 
+        public ResourceEntity GetResourceEntity(NobleQuestGame game, Vector2 position, bool visible)
+        {
+            // Instantiate and Set Properties in GameEntity
+            ResourceEntity resource = new ResourceEntity();
+            resource.Texture = game.Content.Load<Texture2D>("ResourceBar");
+            resource.Position = position;
+            resource.Velocity = new Vector2(0f, 0f);
+            resource.Midpoint = new Vector2(0f, 0f);
+            resource.Rotation = 0.0f;
+            resource.SrcRectangle = new Rectangle(0, 0, resource.Texture.Width, resource.Texture.Height);
+            resource.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
+                resource.Texture.Width, resource.Texture.Height);
+            resource.Game = game;
+            resource.PlayerOwned = true;
+            resource.EnemyOwned = false;
+
+            // Set Properties in ResourceEntity
+            resource.IsVisible = visible;
+            resource.SpriteFont = game.SpriteFont;
+            resource.Gold = 10;
+            resource.Laborers = 1;
+            resource.PopulationLimit = 1;
+            resource.CurrentPopulation = 1;
+            
+
+            return resource;
+        }
+
         public NodeEntity GetPlayerTown(Game game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
@@ -33,8 +61,7 @@ namespace NobleQuest.Entity
             town.EnemyOwned = false;
 
             // Set Properties in NodeEntity
-            town.StructurePresent = true;
-            town.Resource = NodeEntity.Resources.WOOD;
+            town.HasResourceStructure = true;
             town.LeftPaths = null;
             town.RightPaths = new List<PathEntity>();
             town.PreferredPathEntity = null;
@@ -61,8 +88,7 @@ namespace NobleQuest.Entity
             town.PlayerOwned = false;
 
             // Set Properties in NodeEntity
-            town.StructurePresent = true;
-            town.Resource = NodeEntity.Resources.WOOD;
+            town.HasResourceStructure = true;
             town.LeftPaths = new List<PathEntity>();
             town.RightPaths = null;
             town.PreferredPathEntity = null;
@@ -127,12 +153,11 @@ namespace NobleQuest.Entity
             grassNode.PlayerOwned = false;
 
             // Set Properties in NodeEntity
-            grassNode.StructurePresent = true;
-            grassNode.Resource = NodeEntity.Resources.HAY;
+            grassNode.HasResourceStructure = false;
             grassNode.LeftPaths = new List<PathEntity>();
             grassNode.RightPaths = new List<PathEntity>();
             grassNode.PreferredPathEntity = null;
-            grassNode.FortPresent = false;
+            grassNode.HasFort = false;
             grassNode.Fort = null;
 
             return grassNode;
