@@ -18,16 +18,16 @@ namespace NobleQuest.Entity
             if (HitPoints <= 0)
             {
                 base.Game.DynamicEntityList.Remove(this);
-                if (PlayerOwned)
-                {
-                    base.Game.Player.Resources.CurrentPopulation--;
-                    base.Game.Player.Resources.Infantry--;
-                }
-                else
-                {
-                    base.Game.Enemy.Resources.CurrentPopulation--;
-                    base.Game.Enemy.Resources.Infantry--;
-                }
+                //if (PlayerOwned)
+                //{
+                //    Game.Player.Resources.CurrentPopulation--;
+                //    Game.Player.Resources.Infantry--;
+                //}
+                //else
+                //{
+                //    Game.Enemy.Resources.CurrentPopulation--;
+                //    Game.Enemy.Resources.Infantry--;
+                //}
             }
 
             base.Update(gameTime);
@@ -143,6 +143,12 @@ namespace NobleQuest.Entity
                     Moving = false;
                 }
             }
+        }
+
+        public override void Attack(DynamicEntity target)
+        {
+            target.HitPoints -= this.attack;
+            
         }
     } // End of InfantryEntity Class
 }

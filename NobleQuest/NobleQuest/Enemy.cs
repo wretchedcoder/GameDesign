@@ -22,7 +22,7 @@ namespace NobleQuest
         public bool HasArmory = false;
 
         public float infantryTime = 0.0f;
-        public float infantryDelay = 10.0f;
+        public float infantryDelay = 15.0f;
 
         public Enemy()
         {

@@ -119,7 +119,7 @@ namespace NobleQuest.Entity
                     1.0f,
                     SpriteEffects.None,
                     1.0f);
-                text = "Build Blacksmith! (S)";
+                text = "Blacksmith (S)";
                 namePosition.X += 5f;
                 namePosition.Y += 5f;
                 SpriteBatch.DrawString(SpriteFont, text, namePosition, Color.Black);

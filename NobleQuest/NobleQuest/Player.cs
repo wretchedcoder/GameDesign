@@ -186,7 +186,7 @@ namespace NobleQuest
             }
             #endregion Update Selected Node
 
-            #region Laborer (R)
+            #region Worker (R)
             bool rIsPressed = Keyboard.GetState().IsKeyDown(Keys.R);
             workerTime += currentTime;
             if (rIsPressed
@@ -212,7 +212,7 @@ namespace NobleQuest
                     // TODO: Put Message About Insufficient Gold Here
                 }
             }
-            #endregion Laborer (R)
+            #endregion Worker (R)
         } // End of Update
     } // End of Player Class
 } // End of Package
