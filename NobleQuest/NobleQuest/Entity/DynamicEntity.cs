@@ -18,6 +18,9 @@ namespace NobleQuest.Entity
         public int Direction;
         public int LEFT = -1;
         public int RIGHT = 1;
+        public bool isHandlingTownCollison = false;
+        public bool isHandlingNodeCollison = false;
+        public bool isHandlingDynEntityCollison = false;
 
         public DynamicEntity()
         {

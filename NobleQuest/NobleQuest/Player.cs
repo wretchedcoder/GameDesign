@@ -19,6 +19,8 @@ namespace NobleQuest
         public ResourceEntity Resources;
         public NodeEntity SelectedNode;
 
+        public bool isUpdating = false;
+
         public float currentTime = 0.0f;
 
         public float farmTime = 0.0f;

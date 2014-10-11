@@ -23,16 +23,6 @@ namespace NobleQuest.Entity
             if (HitPoints <= 0)
             {
                 base.Game.DynamicEntityList.Remove(this);
-                //if (PlayerOwned)
-                //{
-                //    base.Game.Player.Resources.CurrentPopulation--;
-                //    base.Game.Player.Resources.Laborers--;
-                //}
-                //else
-                //{
-                //    base.Game.Enemy.Resources.CurrentPopulation--;
-                //    base.Game.Enemy.Resources.Laborers--;
-                //}
             }
 
             base.Update(gameTime);

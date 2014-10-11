@@ -142,7 +142,7 @@ namespace NobleQuest.Entity
             return pathEntity;
         }
 
-        public NodeEntity GetGrassNode(NobleQuestGame game, Vector2 position)
+        public NodeEntity GetNode(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
             NodeEntity grassNode = new NodeEntity();
@@ -150,6 +150,7 @@ namespace NobleQuest.Entity
             grassNode.Position = position;
             grassNode.Velocity = new Vector2(0f, 0f);
             grassNode.Midpoint = new Vector2(grassNode.Texture.Width / 2, grassNode.Texture.Height / 2);
+            //grassNode.Midpoint = new Vector2(0f, 0f);
             grassNode.Rotation = 0.0f;
             grassNode.SrcRectangle = new Rectangle(0, 0, grassNode.Texture.Width, grassNode.Texture.Height);
             grassNode.DestRectangle = new Rectangle((int)position.X, (int)position.Y,

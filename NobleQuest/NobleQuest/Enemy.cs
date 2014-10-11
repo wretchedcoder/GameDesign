@@ -31,12 +31,6 @@ namespace NobleQuest
 
         public void Update(GameTime gameTime)
         {
-            infantryTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
-            if (infantryTime > infantryDelay)
-            {
-                infantryTime -= infantryDelay;
-                this.Game.EntityFactory.GetInfantryEntity(this.Game, false, this.Town);
-            }
             
         }
     }

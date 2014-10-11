@@ -23,17 +23,21 @@ namespace NobleQuest
         public Boolean PlayerOwned;
         public Boolean EnemyOwned;
         public Random RandomGenerator;
+        public bool IsVisible;
 
         public static Vector2 ZERO_VELOCITY = new Vector2(0f, 0f);
         
         public GameEntity() 
         {
             RandomGenerator = new Random();
+            IsVisible = true;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
+            if (IsVisible)
+            {
+                spriteBatch.Draw(
                 this.Texture,
                 this.Position,
                 this.SrcRectangle,
@@ -43,6 +47,7 @@ namespace NobleQuest
                 1.0f,
                 SpriteEffects.None,
                 1.0f);
+            }            
         }
 
         public virtual void Update(GameTime gameTime)

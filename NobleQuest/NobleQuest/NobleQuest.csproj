@@ -44,7 +44,9 @@
     <Compile Include="Entity\MapBuilder.cs" />
     <Compile Include="Entity\NodeEntity.cs" />
     <Compile Include="Entity\PathEntity.cs" />
+    <Compile Include="Entity\PathSelectionEntity.cs" />
     <Compile Include="Entity\ResourceEntity.cs" />
+    <Compile Include="Entity\SelectionEntity.cs" />
     <Compile Include="Entity\TownNode.cs" />
     <Compile Include="Entity\WorkerEntity.cs" />
     <Compile Include="NobleQuestGame.cs" />
@@ -75,6 +77,9 @@
     <Content Include="Content\Path.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\PathArrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\PlayerCity.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -82,6 +87,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ResourceBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SelectionArrow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Worker.png">

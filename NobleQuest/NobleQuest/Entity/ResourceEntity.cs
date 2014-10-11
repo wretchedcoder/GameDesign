@@ -11,7 +11,6 @@ namespace NobleQuest.Entity
 {
     public class ResourceEntity : GameEntity
     {
-        public bool IsVisible;
         public int Gold = 200;
         public int CurrentPopulation = 0;
         public int PopulationLimit = 0;

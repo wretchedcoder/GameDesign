@@ -26,11 +26,20 @@ namespace NobleQuest
         public EntityFactory EntityFactory;
         public Player Player;
         public Enemy Enemy;
+        public SelectionEntity SelectionEntity;
 
         public float TimeCounter;
 
         public SpriteFont SpriteFont;
         public static Texture2D BlockBar;
+
+        public Random Random;
+
+        public MouseState OldMouseState;
+        public MouseState NewMouseState;
+        public KeyboardState OldKeyState;
+        public KeyboardState NewKeyState;
+        public NodeEntity SelectedNode;
 
         public NobleQuestGame()
             : base()
@@ -51,8 +60,9 @@ namespace NobleQuest
             this.Player.Game = this;
             this.Enemy = new Enemy();
             this.Enemy.Game = this;
-
             
+
+            this.Random = new Random();
         }
 
         /// <summary>
@@ -68,6 +78,8 @@ namespace NobleQuest
             MapBuilder MapBuilder = new MapBuilder();
 
             MapBuilder.BuildMap(this);
+
+            SelectionEntity = new SelectionEntity(this);
 
             base.Initialize();
         }
@@ -110,6 +122,44 @@ namespace NobleQuest
 
             TimeCounter += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
+            #region Get Selected Node
+            NewMouseState = Mouse.GetState();
+            if (OldMouseState != null)
+            {
+                if (OldMouseState.LeftButton == ButtonState.Pressed 
+                    && NewMouseState.LeftButton == ButtonState.Released)
+                {
+                    for (int i = NodeEntityList.Count - 1; i >= 0; i--)
+                    {
+                        int NodeXOffset = (int)NodeEntityList[i].Midpoint.X;
+                        int NodeYOffset = (int)NodeEntityList[i].Midpoint.Y;
+                        if (NodeEntityList[i].DestRectangle.Contains(NewMouseState.X + NodeXOffset, NewMouseState.Y + NodeYOffset))
+                        {
+                            SelectionEntity.setSelectedNode(NodeEntityList[i]);
+                            break;
+                        }
+                        SelectionEntity.SelectedNode = null;
+                    }
+                }                
+            }
+            OldMouseState = NewMouseState;
+            #endregion Get Selected Node
+
+            // Keyboard.GetState().IsKeyDown(Keys.Escape)
+            NewKeyState = Keyboard.GetState();
+            if (OldKeyState != null)
+            {
+                if (OldKeyState.IsKeyDown(Keys.Tab) 
+                    && NewKeyState.IsKeyUp(Keys.Tab)
+                    && SelectionEntity.SelectedNode != null)
+                {
+                    SelectionEntity.SelectedNode.IncrementPreferredPath();
+                }
+            }
+            OldKeyState = NewKeyState;
+
+
+            
             this.Player.Update(gameTime);
             this.Enemy.Update(gameTime);
             this.Player.Resources.Update(gameTime);
@@ -126,7 +176,9 @@ namespace NobleQuest
             {
                 DynamicEntityList[i].Update(gameTime);
             }
-
+            SelectionEntity.Update(gameTime);
+           
+            /*
             // Check for Dynamic Entity Collisions
             for (int i = DynamicEntityList.Count - 1; i >= 0; i-- )
             {
@@ -156,6 +208,7 @@ namespace NobleQuest
                     }
                 }
             }
+             * */
 
             base.Update(gameTime);
         }
@@ -183,6 +236,7 @@ namespace NobleQuest
             {
                 DynamicEntityList[i].Draw(this.SpriteBatch);
             }
+            SelectionEntity.Draw(this.SpriteBatch);
             this.SpriteBatch.End();
 
             base.Draw(gameTime);
