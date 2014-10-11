@@ -158,7 +158,6 @@ namespace NobleQuest
             }
             OldKeyState = NewKeyState;
 
-
             
             this.Player.Update(gameTime);
             this.Enemy.Update(gameTime);

@@ -120,7 +120,8 @@ namespace NobleQuest.Entity
             pathEntity.Rotation = (float)rotation;
             pathEntity.SrcRectangle = new Rectangle(0,0,(int)nodeDistance,pathEntity.Texture.Height);
             pathEntity.DestRectangle = new Rectangle((int)pathEntity.Position.X, (int)pathEntity.Position.Y,
-                pathEntity.SrcRectangle.Width, pathEntity.SrcRectangle.Height);
+                (int)(Math.Abs(rightNode.Position.X - leftNode.Position.X)), 
+                (int)(Math.Abs(rightNode.Position.Y - leftNode.Position.Y)));
             pathEntity.Game = game;
             pathEntity.PlayerOwned = false;
             pathEntity.EnemyOwned = false;

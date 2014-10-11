@@ -62,15 +62,10 @@ namespace NobleQuest.Entity
 
             PathEntity crossOverPath = 
                 EntityFactory.GetPathEntity(this.Game, TopLane[topIndex], MiddleLane[topIndex + 1]);
-            TopLane[topIndex].RightPaths.Add(crossOverPath);
-            MiddleLane[topIndex + 1].LeftPaths.Add(crossOverPath);
-
             this.Game.PathEntityList.Add(crossOverPath);
 
             crossOverPath =
                 EntityFactory.GetPathEntity(this.Game, MiddleLane[bottomIndex - 2], BottomLane[bottomIndex - 1]);
-            MiddleLane[bottomIndex - 2].RightPaths.Add(crossOverPath);
-            BottomLane[bottomIndex - 1].LeftPaths.Add(crossOverPath);
             this.Game.PathEntityList.Add(crossOverPath);
         }
 
