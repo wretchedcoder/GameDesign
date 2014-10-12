@@ -11,5 +11,9 @@ namespace NobleQuest.Entity
 {
     public class TownNode : NodeEntity
     {
+        public TownNode(NobleQuestGame Game) : base(Game)
+        {
+            
+        }
     }
 }

@@ -11,87 +11,57 @@ namespace NobleQuest.Entity
 {
     public class WorkerEntity : DynamicEntity
     {
-        public List<NodeEntity> VisitedNodes;
+        public HashSet<NodeEntity> nodesVisited;
 
         public WorkerEntity()
         {
-            VisitedNodes = new List<NodeEntity>();
+            nodesVisited = new HashSet<NodeEntity>();
+            this.CanMoveToNonOwned = false;
         }
+
 
         public override void Update(GameTime gameTime)
         {
-            if (HitPoints <= 0)
-            {
-                base.Game.DynamicEntityList.Remove(this);
-            }
-
             base.Update(gameTime);
-        }
 
-        public override void HandleCollision(TownNode town)
+        }
+        public override void HandleCollision(TownNode town) 
         {
-            if (this.PlayerOwned)
+            int nodesVisitedCount = nodesVisited.Count;
+            nodesVisitedCount = ((nodesVisitedCount) * (nodesVisitedCount + 1)) / 2;
+
+            if (this.OwnedBy == Owners.PLAYER)
             {
-                if (town.PlayerOwned)
-                { 
-                    this.Game.Player.Resources.Gold += (VisitedNodes.Count * (VisitedNodes.Count + 1)) / 2;
-                    VisitedNodes.Clear();
-                    Velocity = ZERO_VELOCITY;
-                    Moving = false;
-                    Location = town;
-                    Direction = RIGHT;
-                }
-                else
-                {
-                    Velocity = ZERO_VELOCITY;
-                    Moving = false;
-                    Location = town;
-                    Direction = LEFT;
-                }
+                this.Game.Player.Resources.Gold += nodesVisitedCount;
             }
             else
             {
-                
+                this.Game.Enemy.Resources.Gold += nodesVisitedCount;
             }
+            nodesVisited.Clear();
         }
 
-        public override void HandleCollision(NodeEntity node)
-        {
+        public override void HandleCollision(NodeEntity node) 
+        { 
             if (node.isTown)
             {
                 return;
             }
-            
-            if (this.PlayerOwned)
+
+            if (node.OwnedBy == this.OwnedBy)
             {
-                if (node.PlayerOwned)
-                {
-                    if (!VisitedNodes.Contains(node) && node != Game.Player.Town)
-                    {
-                        VisitedNodes.Add(node);
-                    }
-                }
-                else
-                {
-                    Velocity = ZERO_VELOCITY;
-                    Moving = false;
-                    Location = node;
-                    Direction = LEFT;
-                }                
+                nodesVisited.Add(node);
             }
             else
             {
-                Velocity = ZERO_VELOCITY;
-                Moving = false;
-                Location = node;
-                Direction = LEFT;
+                StopEntity();
+                ReverseDirection();
             }
         }
 
-        public override void HandleCollision(DynamicEntity dynamic) 
-        { 
-            
-        }
+        public virtual void HandleCollision(DynamicEntity dynamic) { }
+
+        public virtual void Attack(DynamicEntity target) { }
     }
 
     

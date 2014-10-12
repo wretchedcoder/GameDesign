@@ -9,146 +9,48 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace NobleQuest.Entity
 {
-    class InfantryEntity : Entity.DynamicEntity
+    public class InfantryEntity : Entity.DynamicEntity
     {
-        public int attack = 10;
-
         public override void Update(GameTime gameTime)
         {
-            if (HitPoints <= 0)
-            {
-                base.Game.DynamicEntityList.Remove(this);
-                //if (PlayerOwned)
-                //{
-                //    Game.Player.Resources.CurrentPopulation--;
-                //    Game.Player.Resources.Infantry--;
-                //}
-                //else
-                //{
-                //    Game.Enemy.Resources.CurrentPopulation--;
-                //    Game.Enemy.Resources.Infantry--;
-                //}
-            }
-
             base.Update(gameTime);
         }
 
-        public override void HandleCollision(TownNode town)
-        {
-            if (PlayerOwned)
-            {
-                if (town.EnemyOwned == true)
-                {
-                    this.Game.DynamicEntityList.Remove(this);
-                    this.Game.Player.Resources.CurrentPopulation--;
-                    this.Game.Player.Resources.Infantry--;
-                }
-                else
-                {
-                    Location = town;
-                    Velocity = ZERO_VELOCITY;
-                    Moving = false;
-                }
-            }
-            else
-            {
-                if (town.PlayerOwned)
-                {
-                    this.Game.DynamicEntityList.Remove(this);
-                    this.Game.Enemy.Resources.CurrentPopulation--;
-                    this.Game.Enemy.Resources.Infantry--;
-                }
-                else
-                {
-                    Location = town;
-                    Velocity = ZERO_VELOCITY;
-                    Moving = false;
-                }
-            }
+        public override void HandleCollision(TownNode town) 
+        { 
+            
         }
 
-        public override void HandleCollision(DynamicEntity dynamic)
-        {
-            if (this.PlayerOwned)
-            {
-                if (dynamic.PlayerOwned)
-                {
-                    // No Action
-                }
-                else
-                {
-                    dynamic.HitPoints -= this.attack;
-                }
-            }
-            else
-            {
-                if (dynamic.PlayerOwned)
-                {
-                    dynamic.HitPoints -= this.attack;
-                }
-                else
-                {
-                    // No Action
-                }
-            }
-        }
-
-        public override void HandleCollision(NodeEntity node)
-        {
-            if (node.isTown == true)
+        public override void HandleCollision(NodeEntity node) 
+        { 
+            // HandleCollison(TownNode) handles this...
+            if (node.isTown)
             {
                 return;
             }
-            if (this.PlayerOwned)
-            {
-                if (node.PlayerOwned)
-                {
-                    // Check Wait Flag
-                }
-                else if (node.EnemyOwned)
-                {
-                    // Check Fort
-                    // Attack Fort if Present
-                    // Claim for Player if not
 
-                    node.PlayerOwned = true;
-                    node.EnemyOwned = false; 
-                }
-                else
-                {
-                    node.PlayerOwned = true;
-                    Location = node;
-                    Moving = false;
-                }
-            }
-            else 
+            switch (OwnedBy)
             {
-                if (node.PlayerOwned)
-                {
-                    // Check Fort
-                    // Attack Fort if Present
-                    // Claim for Player if not
-                    node.EnemyOwned = true;
-                    node.PlayerOwned = false;
-                }
-                else if (node.EnemyOwned)
-                {
-                    // Check Wait Flag
-                    
-                }
-                else
-                {
-                    node.EnemyOwned = true;
-                    Location = node;
-                    Moving = false;
-                }
+                case Owners.PLAYER:
+                    if (node.OwnedBy != Owners.PLAYER)
+                    {
+                        node.OwnedBy = Owners.PLAYER;
+                    }
+                    break;
+                case Owners.ENEMY:
+                    if (node.OwnedBy != Owners.ENEMY)
+                    {
+                        node.OwnedBy = Owners.ENEMY;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
-        public override void Attack(DynamicEntity target)
-        {
-            target.HitPoints -= this.attack;
-            
-        }
+        public override void HandleCollision(DynamicEntity dynamic) { }
+
+        public override void Attack(DynamicEntity target) { }
+        
     } // End of InfantryEntity Class
 }

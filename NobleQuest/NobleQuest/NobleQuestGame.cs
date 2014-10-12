@@ -23,6 +23,8 @@ namespace NobleQuest
         public List<NodeEntity> NodeEntityList;
         public List<PathEntity> PathEntityList;
         public List<DynamicEntity> DynamicEntityList;
+        public List<PathSelectionEntity> PathSelectionList;
+        public List<GameEntity> OrderList;
         public EntityFactory EntityFactory;
         public Player Player;
         public Enemy Enemy;
@@ -55,12 +57,13 @@ namespace NobleQuest
             NodeEntityList = new List<NodeEntity>();
             PathEntityList = new List<PathEntity>();
             DynamicEntityList = new List<DynamicEntity>();
+            PathSelectionList = new List<PathSelectionEntity>();
+            OrderList = new List<GameEntity>();
             this.EntityFactory = new EntityFactory();
             this.Player = new Player();
             this.Player.Game = this;
             this.Enemy = new Enemy();
-            this.Enemy.Game = this;
-            
+            this.Enemy.Game = this;            
 
             this.Random = new Random();
         }
@@ -155,6 +158,20 @@ namespace NobleQuest
                 {
                     SelectionEntity.SelectedNode.IncrementPreferredPath();
                 }
+
+                if (OldKeyState.IsKeyDown(Keys.LeftShift)
+                    && NewKeyState.IsKeyUp(Keys.LeftShift)
+                    && SelectionEntity.SelectedNode != null)
+                {
+                    SelectionEntity.SelectedNode.ClearPreferred() ;
+                }
+
+                if (OldKeyState.IsKeyDown(Keys.W)
+                    && NewKeyState.IsKeyUp(Keys.W)
+                    && SelectionEntity.SelectedNode != null)
+                {
+                    SelectionEntity.SelectedNode.ToggleWaitOrder();
+                }
             }
             OldKeyState = NewKeyState;
 
@@ -177,7 +194,7 @@ namespace NobleQuest
             }
             SelectionEntity.Update(gameTime);
            
-            /*
+            
             // Check for Dynamic Entity Collisions
             for (int i = DynamicEntityList.Count - 1; i >= 0; i-- )
             {
@@ -207,7 +224,7 @@ namespace NobleQuest
                     }
                 }
             }
-             * */
+            
 
             base.Update(gameTime);
         }
@@ -234,6 +251,14 @@ namespace NobleQuest
             for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
             {
                 DynamicEntityList[i].Draw(this.SpriteBatch);
+            }
+            for (int i = PathSelectionList.Count - 1; i >= 0; i--)
+            {
+                PathSelectionList[i].Draw(this.SpriteBatch);
+            }
+            for (int i = OrderList.Count - 1; i >= 0; i--)
+            {
+                OrderList[i].Draw(this.SpriteBatch);
             }
             SelectionEntity.Draw(this.SpriteBatch);
             this.SpriteBatch.End();

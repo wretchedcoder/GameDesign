@@ -38,6 +38,9 @@ namespace NobleQuest
         public float workerTime = 0.0f;
         public float workerCooldown = 0.0f;
 
+        private KeyboardState OldKeyState;
+        private KeyboardState NewKeyState;
+
         public Player()
         {
             EntityFactory = new EntityFactory();
@@ -47,174 +50,28 @@ namespace NobleQuest
         {
             currentTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
-            #region Farm (A)
-            bool aIsPressed = Keyboard.GetState().IsKeyDown(Keys.A);
-            farmTime += currentTime;
-            if (aIsPressed 
-                && this.Resources.Gold >= 10
-                && farmTime >= farmCooldown)
-            {
-                this.Resources.Gold -= 10;
-                farmTime -= farmCooldown;
-                Game.Player.Resources.PopulationLimit++;
-            }
-            #endregion Farm (A)
+            CheckKeyState();
 
-            #region Infantry (S)
-            bool sIsPressed = Keyboard.GetState().IsKeyDown(Keys.S);
-            infantryTime += currentTime;
-            if (sIsPressed
-                && infantryTime >= infantryCooldown)
-            {
-                if (this.Resources.Gold >= 50)
-                {
-                    if (this.Resources.HasBlacksmith)
-                    {
-                        if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
-                        {
-                            this.Resources.Gold -= 50;
-                            infantryTime -= infantryCooldown;
-                            this.Resources.Infantry++;
-                            this.Resources.CurrentPopulation++;
-
-                            EntityFactory.GetInfantryEntity(Game, true, this.Town);
-                        }
-                        else
-                        {
-                            // TODO: Put Message about population exceed
-                        }                        
-                    }
-                    else
-                    {
-                        this.Resources.Gold -= 50;
-                        infantryTime -= infantryCooldown;
-                        this.Resources.HasBlacksmith = true;
-                    }
-                }
-                else
-                {
-                    // TODO: Put Message About Insufficient Gold Here
-                }
-            }
-            #endregion Infantry (S)
-
-            #region Archer (D)
-            bool dIsPressed = Keyboard.GetState().IsKeyDown(Keys.D);
-            archerTime += currentTime;
-            if (dIsPressed
-                && archerTime >= archerCooldown)
-            {
-                if (this.Resources.Gold >= 50)
-                {
-                    if (this.Resources.HasFletchery)
-                    {
-                        if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
-                        {
-                            this.Resources.Gold -= 50;
-                            archerTime -= archerCooldown;
-                            this.Resources.Archer++;
-                            this.Resources.CurrentPopulation++;
-
-                            // TODO EntityFactory.GetArcherEntity(Game, true, this.Town);
-                        }
-                        else
-                        {
-                            // TODO: Put Message about population exceed
-                        }
-                    }
-                    else
-                    {
-                        this.Resources.Gold -= 50;
-                        archerTime -= archerCooldown;
-                        this.Resources.HasFletchery = true;
-                    }
-                }
-                else
-                {
-                    // TODO: Put Message About Insufficient Gold Here
-                }
-            }
-            #endregion Archer (D)
-
-            #region Knight (F)
-            bool fIsPressed = Keyboard.GetState().IsKeyDown(Keys.F);
-            knightTime += currentTime;
-            if (fIsPressed
-                && knightTime >= knightCooldown)
-            {
-                if (this.Resources.Gold >= 50)
-                {
-                    if (this.Resources.HasArmory)
-                    {
-                        if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
-                        {
-                            this.Resources.Gold -= 50;
-                            knightTime -= knightCooldown;
-                            this.Resources.Knight++;
-                            this.Resources.CurrentPopulation++;
-
-                            // TODO EntityFactory.GetKnightEntity(Game, true, this.Town);
-                        }
-                        else
-                        {
-                            // TODO: Put Message about population exceed
-                        }
-                    }
-                    else
-                    {
-                        this.Resources.Gold -= 50;
-                        knightTime -= knightCooldown;
-                        this.Resources.HasArmory = true;
-                    }
-                }
-                else
-                {
-                    // TODO: Put Message About Insufficient Gold Here
-                }
-            }
-            #endregion Knight (F)
-
-            #region Update Selected Node
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-            {
-                foreach (NodeEntity node in Game.NodeEntityList)
-                {
-                    if (node.DestRectangle.Contains(Mouse.GetState().Position))
-                    {
-                        this.SelectedNode = node;
-                        break;
-                    }
-                }
-            }
-            #endregion Update Selected Node
-
-            #region Worker (R)
-            bool rIsPressed = Keyboard.GetState().IsKeyDown(Keys.R);
-            workerTime += currentTime;
-            if (rIsPressed
-                && workerTime >= workerCooldown)
-            {
-                if (this.Resources.Gold >= 50)
-                {
-                    if (this.Resources.CurrentPopulation < this.Resources.PopulationLimit)
-                    {
-                        this.Resources.Gold -= 50;
-                        workerTime -= workerCooldown;
-                        this.Resources.Laborers++;
-                        this.Resources.CurrentPopulation++;
-                        this.Game.DynamicEntityList.Add(EntityFactory.GetWorkerEntity(this.Game, true, this.Town));
-                    }
-                    else
-                    {
-                        // TODO: Put Message about population exceed
-                    }
-                }                
-                else
-                {
-                    // TODO: Put Message About Insufficient Gold Here
-                }
-            }
-            #endregion Worker (R)
         } // End of Update
+
+        private void CheckKeyState()
+        {
+            NewKeyState = Keyboard.GetState();
+            if (OldKeyState != null)
+            {
+                if (OldKeyState.IsKeyDown(Keys.A)
+                    && NewKeyState.IsKeyUp(Keys.A))
+                {
+                    this.Game.EntityFactory.GetWorkerEntity(this.Game, true, this.Town);
+                }
+
+                if (OldKeyState.IsKeyDown(Keys.S)
+                    && NewKeyState.IsKeyUp(Keys.S))
+                {
+                    this.Game.EntityFactory.GetInfantryEntity(this.Game, Owners.PLAYER, this.Town);
+                }
+            }
+            OldKeyState = NewKeyState;
+        }
     } // End of Player Class
 } // End of Package

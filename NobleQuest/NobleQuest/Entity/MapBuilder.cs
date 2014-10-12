@@ -56,17 +56,8 @@ namespace NobleQuest.Entity
             // Build Bottom Lane
             this.BuildLane(BottomLane, 100.0f, 300.0f, game.Player.Town, game.Enemy.Town);
 
-            // Randomly Choose Crossing Paths
-            int topIndex = this.Game.Random.Next(LANE_LENGTH - 1);
-            int bottomIndex = LANE_LENGTH - topIndex;
-
-            PathEntity crossOverPath = 
-                EntityFactory.GetPathEntity(this.Game, TopLane[topIndex], MiddleLane[topIndex + 1]);
-            this.Game.PathEntityList.Add(crossOverPath);
-
-            crossOverPath =
-                EntityFactory.GetPathEntity(this.Game, MiddleLane[bottomIndex - 2], BottomLane[bottomIndex - 1]);
-            this.Game.PathEntityList.Add(crossOverPath);
+            // Crossing Paths
+            this.buildCrossPaths();
         }
 
         public void BuildLane(NodeEntity[] LaneArray, float xOffset, float yPosition, 
@@ -89,6 +80,42 @@ namespace NobleQuest.Entity
             }
 
             this.Game.PathEntityList.Add(EntityFactory.GetPathEntity(this.Game, (NodeEntity)LastGameEntity, endNode));
+        }
+
+        public void buildCrossPaths()
+        {
+            for (int i = this.Game.Random.Next(2); i < MiddleLane.Length; i = i+2)
+            {
+                // Build Cross Paths to i - 1
+                if (i-1 >= 0)
+                {
+                    this.Game.PathEntityList.Add(
+                        EntityFactory.GetPathEntity(
+                            this.Game, 
+                            TopLane[i-1], 
+                            MiddleLane[i]));
+                    this.Game.PathEntityList.Add(
+                        EntityFactory.GetPathEntity(
+                            this.Game,
+                            BottomLane[i - 1],
+                            MiddleLane[i]));
+                }
+
+                // Build Cross Paths to i + 1
+                if (i+1 < BottomLane.Length)
+                {
+                    this.Game.PathEntityList.Add(
+                        EntityFactory.GetPathEntity(
+                            this.Game,
+                            TopLane[i + 1],
+                            MiddleLane[i]));
+                    this.Game.PathEntityList.Add(
+                        EntityFactory.GetPathEntity(
+                            this.Game,
+                            BottomLane[i + 1],
+                            MiddleLane[i]));
+                }
+            }
         }
     }
 }

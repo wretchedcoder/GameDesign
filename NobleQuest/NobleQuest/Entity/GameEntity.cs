@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace NobleQuest
 {
+    public enum Owners { PLAYER, ENEMY, NEUTRAL };
+
+    public enum Orders { NONE, HALT, GO };
+
     public class GameEntity
     {
         public Texture2D Texture;
@@ -24,6 +28,8 @@ namespace NobleQuest
         public Boolean EnemyOwned;
         public Random RandomGenerator;
         public bool IsVisible;
+        public Owners OwnedBy;
+        public Orders Order;
 
         public static Vector2 ZERO_VELOCITY = new Vector2(0f, 0f);
         
