@@ -17,6 +17,7 @@ namespace NobleQuest.Entity
         {
             nodesVisited = new HashSet<NodeEntity>();
             this.CanMoveToNonOwned = false;
+            this.IgnoresOrders = true;
         }
 
 

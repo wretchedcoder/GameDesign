@@ -238,7 +238,7 @@ namespace NobleQuest
             GraphicsDevice.Clear(Color.Ivory);
 
             this.SpriteBatch.Begin();
-            this.Player.Resources.Draw(this.SpriteBatch);
+            // this.Player.Resources.Draw(this.SpriteBatch);
             // this.Enemy.Resources.Draw(this.SpriteBatch);
             for (int i = PathEntityList.Count - 1; i >= 0; i-- )
             {

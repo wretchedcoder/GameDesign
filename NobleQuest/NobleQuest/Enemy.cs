@@ -22,7 +22,7 @@ namespace NobleQuest
         public bool HasArmory = false;
 
         public float infantryTime = 0.0f;
-        public float infantryDelay = 15.0f;
+        public float infantryDelay = 30.0f;
 
         public Enemy()
         {
@@ -31,7 +31,7 @@ namespace NobleQuest
 
         public void Update(GameTime gameTime)
         {
-            infantryTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            //infantryTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
             if (infantryTime > infantryDelay)
             {
                 this.Game.EntityFactory.GetInfantryEntity(Game, Owners.ENEMY, Town);

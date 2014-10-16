@@ -22,6 +22,7 @@ namespace NobleQuest.Entity
         public bool IsIgnoringPreferredPath = false;
         public bool IsAtDestination = false;
         public bool CanMoveToNonOwned = true;
+        public bool IgnoresOrders = false;
         
 
         public DynamicEntity()
@@ -32,7 +33,8 @@ namespace NobleQuest.Entity
 
         public override void Update(GameTime gameTime)
         {
-            if (this.Location.Order == Orders.HALT )
+            if (this.Location.Order == Orders.HALT
+                && !this.IgnoresOrders)
             {
                 return;
             }

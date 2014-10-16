@@ -107,13 +107,13 @@ namespace NobleQuest.Entity
                     this.Game.PathEntityList.Add(
                         EntityFactory.GetPathEntity(
                             this.Game,
-                            TopLane[i + 1],
-                            MiddleLane[i]));
+                            MiddleLane[i],
+                            TopLane[i + 1]));
                     this.Game.PathEntityList.Add(
                         EntityFactory.GetPathEntity(
                             this.Game,
-                            BottomLane[i + 1],
-                            MiddleLane[i]));
+                            MiddleLane[i],
+                            BottomLane[i + 1]));
                 }
             }
         }
