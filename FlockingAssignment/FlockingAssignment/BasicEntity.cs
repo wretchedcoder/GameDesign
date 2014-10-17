@@ -57,9 +57,12 @@ namespace FlockingAssignment
                 PlayerVector.Y = Game.Player.Position.Y - this.Position.Y;
 
                 PlayerVector = Vector2.Divide(PlayerVector, 1000);
-                AvoidanceVector = Vector2.Divide(AvoidanceVector, 200);
+                AvoidanceVector = Vector2.Divide(AvoidanceVector, 175);
                 this.Velocity = PlayerVector + AvoidanceVector;
-                this.Rotation = (float) Math.Atan2(this.Velocity.Y, this.Velocity.X);
+                if (this.Velocity.X !=  0 || this.Velocity.Y != 0)
+                {
+                    this.Rotation = (float)Math.Atan2(this.Velocity.Y, this.Velocity.X);
+                }
                 //this.Velocity = PlayerVector;
             }// if(isFlock)
             else if (isPlayer)
@@ -105,10 +108,20 @@ namespace FlockingAssignment
                     }
                 }
                 OldKeyState = NewKeyState;
+                if (this.Velocity.X != 0 || this.Velocity.Y != 0)
+                {
+                    this.Rotation = (float)Math.Atan2(this.Velocity.Y, this.Velocity.X);
+                }
             } // isPlayer
             else
             {
-
+                Vector2 Midpoint = new Vector2(0f, 0f);
+                foreach (BasicEntity Entity in Game.FlockList)
+                {
+                    Midpoint += Entity.Position;
+                }
+                Midpoint = Vector2.Divide(Midpoint, Game.FlockList.Count);
+                Game.Midpoint.Position = Midpoint;
             } // midpoint
 
             Position += Velocity;

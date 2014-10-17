@@ -25,8 +25,8 @@ namespace FlockingAssignment
         public BasicEntity Player;
         public BasicEntity Midpoint;
 
-        public Texture2D BoidTexture;
-        public Texture2D HeroTexture;
+        public Texture2D WolfTexture;
+        public Texture2D SheepTexture;
         public Texture2D MidTexture;
 
         int Width;
@@ -68,38 +68,38 @@ namespace FlockingAssignment
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            BoidTexture = Content.Load<Texture2D>("boid");
-            HeroTexture = Content.Load<Texture2D>("hero");
+            WolfTexture = Content.Load<Texture2D>("wolf");
+            SheepTexture = Content.Load<Texture2D>("sheep");
             MidTexture = Content.Load<Texture2D>("midpoint");
 
             for (int i = 0; i < 20; i++)
             {
                 BasicEntity NewEntity = new BasicEntity();
                 NewEntity.Game = this;
-                NewEntity.Texture = BoidTexture;
+                NewEntity.Texture = WolfTexture;
                 NewEntity.Position = new Vector2(Random.Next(Width), Random.Next(Height));
                 NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, 
-                    (int)NewEntity.Position.Y, BoidTexture.Width, BoidTexture.Height);
+                    (int)NewEntity.Position.Y, WolfTexture.Width, WolfTexture.Height);
 
                 NewEntity.Velocity = new Vector2((float)Random.NextDouble(),
                     (float)Random.NextDouble());
-                NewEntity.Rotation = 0.0f;
-                NewEntity.Midpoint = new Vector2(BoidTexture.Width / 2.0f, 
-                    BoidTexture.Height / 2.0f);
+                NewEntity.Rotation = (float)Math.Atan2(NewEntity.Velocity.Y, NewEntity.Velocity.X);
+                NewEntity.Midpoint = new Vector2(WolfTexture.Width / 2.0f, 
+                    WolfTexture.Height / 2.0f);
                 NewEntity.isFlock = true;
                 FlockList.Add(NewEntity);
             }
 
             Player = new BasicEntity();
             Player.Game = this;
-            Player.Texture = HeroTexture;
+            Player.Texture = SheepTexture;
             Player.Position = new Vector2(Random.Next(Width), Random.Next(Height));
             Player.DestRectangle = new Rectangle((int)Player.Position.X,
-                (int)Player.Position.Y, HeroTexture.Width, HeroTexture.Height);
+                (int)Player.Position.Y, SheepTexture.Width, SheepTexture.Height);
             Player.Velocity = new Vector2(0.0f, 0.0f);
             Player.Rotation = 0.0f;
-            Player.Midpoint = new Vector2(HeroTexture.Width / 2.0f,
-                HeroTexture.Height / 2.0f);
+            Player.Midpoint = new Vector2(SheepTexture.Width / 2.0f,
+                SheepTexture.Height / 2.0f);
             Player.isPlayer = true;
             FlockList.Add(Player);
 
