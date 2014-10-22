@@ -47,22 +47,33 @@ namespace FlockingAssignment
                     thisAvoidance.X = Entity.Position.X - this.Position.X;
                     thisAvoidance.Y = Entity.Position.Y - this.Position.Y;
 
-                    //thisAvoidance = Vector2.Multiply(thisAvoidance, (distance / FlockingGame.PROXIMITY));
+                    thisAvoidance = Vector2.Multiply(thisAvoidance, 
+                        (1.0f - ((float)distance / (float)FlockingGame.PROXIMITY)));
 
                     AvoidanceVector += Vector2.Multiply(thisAvoidance, -1.0f);
                 }
                 // Calculate Player Vector
                 Vector2 PlayerVector = new Vector2(0f, 0f);
                 PlayerVector.X = Game.Player.Position.X - this.Position.X;
-                PlayerVector.Y = Game.Player.Position.Y - this.Position.Y;
-
-                PlayerVector = Vector2.Divide(PlayerVector, 1000);
-                AvoidanceVector = Vector2.Divide(AvoidanceVector, 175);
-                this.Velocity = PlayerVector + AvoidanceVector;
-                if (this.Velocity.X !=  0 || this.Velocity.Y != 0)
+                PlayerVector.Y = Game.Player.Position.Y - this.Position.Y;                
+                
+                PlayerVector = Vector2.Divide(PlayerVector, 1500);
+                while (PlayerVector.Length() > 100)
                 {
-                    this.Rotation = (float)Math.Atan2(this.Velocity.Y, this.Velocity.X);
+                    PlayerVector = Vector2.Divide(PlayerVector, 2.0f);
                 }
+                AvoidanceVector = Vector2.Divide(AvoidanceVector, 100);
+                while (AvoidanceVector.Length() > 500)
+                {
+                    AvoidanceVector = Vector2.Divide(AvoidanceVector, 2.0f);
+                }
+                //AvoidanceVector = Vector2.Zero;
+                this.Velocity = PlayerVector + AvoidanceVector;
+                if (this.Velocity.Length() > 8)
+                {
+                    this.Velocity = Vector2.Divide(this.Velocity, 2.0f);
+                }                
+                this.Rotation = (float)Math.Atan2(this.Velocity.Y, this.Velocity.X);
                 //this.Velocity = PlayerVector;
             }// if(isFlock)
             else if (isPlayer)

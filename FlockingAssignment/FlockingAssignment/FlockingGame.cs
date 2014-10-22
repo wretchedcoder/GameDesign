@@ -101,7 +101,6 @@ namespace FlockingAssignment
             Player.Midpoint = new Vector2(SheepTexture.Width / 2.0f,
                 SheepTexture.Height / 2.0f);
             Player.isPlayer = true;
-            FlockList.Add(Player);
 
             Midpoint = new BasicEntity();
             Midpoint.Game = this;
@@ -113,7 +112,6 @@ namespace FlockingAssignment
             Midpoint.Rotation = 0.0f;
             Midpoint.Midpoint = new Vector2(MidTexture.Width / 2.0f,
                 MidTexture.Height / 2.0f);
-            FlockList.Add(Midpoint);
         }
 
         /// <summary>
