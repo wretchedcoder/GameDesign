@@ -11,10 +11,33 @@ namespace NobleQuest.Entity
 {
     public class InfantryEntity : Entity.DynamicEntity
     {
+        public InfantryEntity()
+        {
+            HitPointMax = 100;
+            HitPoint = 100;
+            Damage = 1;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (this.State == States.ATTACKING)
+            {
+                this.Velocity = Vector2.Zero;
+                this.Attack(TargetEntity);
+            }
+
+            if (HitPoint <= 0)
+            {
+                this.Game.DynamicEntityList.Remove(this);
+                TargetEntity.SetVelocityAndRotation();
+                TargetEntity.State = States.MOVING;
+                TargetEntity.TargetEntity = null;
+            }
         }
+
+        
 
         public override void HandleCollision(TownNode town) 
         { 
@@ -35,12 +58,14 @@ namespace NobleQuest.Entity
                     if (node.OwnedBy != Owners.PLAYER)
                     {
                         node.OwnedBy = Owners.PLAYER;
+                        node.ClearPreferred();
                     }
                     break;
                 case Owners.ENEMY:
                     if (node.OwnedBy != Owners.ENEMY)
                     {
                         node.OwnedBy = Owners.ENEMY;
+                        node.ClearPreferred();
                     }
                     break;
                 default:
@@ -48,9 +73,21 @@ namespace NobleQuest.Entity
             }
         }
 
-        public override void HandleCollision(DynamicEntity dynamic) { }
+        public override void HandleCollision(DynamicEntity dynamic) 
+        { 
+            if (dynamic.OwnedBy != this.OwnedBy)
+            {
+                this.State = States.ATTACKING;
+                dynamic.State = States.ATTACKING;
+                TargetEntity = dynamic;
+                TargetEntity.TargetEntity = dynamic;
+            }
+        }
 
-        public override void Attack(DynamicEntity target) { }
+        public override void Attack(DynamicEntity target) 
+        {
+            target.HitPoint -= this.Damage;
+        }
         
     } // End of InfantryEntity Class
 }

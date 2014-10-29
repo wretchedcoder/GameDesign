@@ -11,7 +11,7 @@ namespace NobleQuest.Entity
 {
     public class DynamicEntity : GameEntity
     {
-        public enum States { STOPPED, MOVING };
+        public enum States { STOPPED, MOVING, ATTACKING };
         public States State;
 
         public enum Directions { LEFT, RIGHT };
@@ -23,12 +23,28 @@ namespace NobleQuest.Entity
         public bool IsAtDestination = false;
         public bool CanMoveToNonOwned = true;
         public bool IgnoresOrders = false;
-        
+        public bool IsWorker = false;
+
+        public DynamicEntity TargetEntity;
+
+        public int HitPointMax;
+        public int HitPoint;
+        public int Damage;
+
+        public Texture2D HitPointBarBackground;
+        public Texture2D HitPointBar;        
 
         public DynamicEntity()
         {
             State = States.STOPPED;
             Direction = Directions.RIGHT;
+
+            HitPointMax = 0;
+            HitPoint = 0;
+            Damage = 0;
+
+            HitPointBarBackground = this.Game.Content.Load<Texture2D>("HitPointBackground");
+            HitPointBar = this.Game.Content.Load<Texture2D>("HitPointBar");
         }
 
         public override void Update(GameTime gameTime)
@@ -85,8 +101,9 @@ namespace NobleQuest.Entity
         {
             // Check for Preferred Path Entity
             if (Location.PreferredPathEntity != null
+                && Location.OwnedBy == this.OwnedBy
                 && !IsIgnoringPreferredPath)
-            {                
+            {
                 switch (Direction)
                 {
                     case Directions.LEFT:
@@ -96,11 +113,23 @@ namespace NobleQuest.Entity
                             {
                                 Direction = Directions.RIGHT;
                                 Destination = Location.PreferredPathEntity.RightNode;
+                                if (Location == Destination)
+                                {
+                                    Direction = Directions.LEFT;
+                                    Destination = Location.PreferredPathEntity.LeftNode;
+                                }
                             }
                             else
                             {
+                                Direction = Directions.LEFT;
                                 Destination = Location.PreferredPathEntity.LeftNode;
-                            }                            
+                                if (Location == Destination)
+                                {
+                                    Direction = Directions.RIGHT;
+                                    Destination = Location.PreferredPathEntity.RightNode;
+                                }
+                            }
+                            
                         }
                         else
                         {
@@ -115,10 +144,21 @@ namespace NobleQuest.Entity
                             {
                                 Direction = Directions.LEFT;
                                 Destination = Location.PreferredPathEntity.LeftNode;
+                                if (Location == Destination)
+                                {
+                                    Direction = Directions.RIGHT;
+                                    Destination = Location.PreferredPathEntity.RightNode;
+                                }
                             }
                             else
                             {
+                                Direction = Directions.RIGHT;
                                 Destination = Location.PreferredPathEntity.RightNode;
+                                if (Location == Destination)
+                                {
+                                    Direction = Directions.LEFT;
+                                    Destination = Location.PreferredPathEntity.LeftNode;
+                                }
                             }     
                         }
                         else
@@ -129,7 +169,7 @@ namespace NobleQuest.Entity
                         return;
                     default:
                         break;
-                }              
+                }  
             }
 
             // Get Random Path
@@ -162,7 +202,7 @@ namespace NobleQuest.Entity
             }
         }// DetermineDestination
 
-        private void SetVelocityAndRotation()
+        public void SetVelocityAndRotation()
         {
             float xDelta = Location.Position.X - Destination.Position.X;
             float yDelta = Location.Position.Y - Destination.Position.Y;
@@ -229,6 +269,18 @@ namespace NobleQuest.Entity
             {
                 Direction = Directions.RIGHT;
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            if (HitPointMax > 0)
+            {
+                return;
+            }
+
+
         }
 
         public virtual void HandleCollision(TownNode town) { }
