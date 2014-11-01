@@ -47,16 +47,18 @@ namespace NobleQuest.Entity
         public NodeEntity GetPlayerTown(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
-            TownNode town = new TownNode(game);            
+            TownNode town = new TownNode(game, Owners.PLAYER);            
             town.Texture = game.Content.Load<Texture2D>("PlayerCity");
             town.Position = position;
             town.Velocity = new Vector2(0f, 0f);
             town.Midpoint = new Vector2(town.Texture.Width / 2.0f, town.Texture.Height / 2.0f);
             town.Rotation = 0.0f;
             town.SrcRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
-            town.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
-                town.Texture.Width, town.Texture.Height);
-            town.OwnedBy = Owners.PLAYER;
+            town.DestRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
+            town.DestRectangle.X = (int)(town.Position.X - town.Midpoint.X);
+            town.DestRectangle.Y = (int)(town.Position.Y - town.Midpoint.Y);
+            town.Owner = Owners.PLAYER;
+            
 
             // Set Properties in NodeEntity
             town.HasResourceStructure = true;
@@ -67,6 +69,7 @@ namespace NobleQuest.Entity
             town.isTown = true;
 
             // Set Properties in TownNode
+
                        
 
             return town;
@@ -75,16 +78,17 @@ namespace NobleQuest.Entity
         public NodeEntity GetEnemyTown(NobleQuestGame game, Vector2 position)
         {
             // Instantiate and Set Properties in GameEntity
-            TownNode town = new TownNode(game);
+            TownNode town = new TownNode(game, Owners.ENEMY);
             town.Texture = game.Content.Load<Texture2D>("EnemyCity");
             town.Position = position;
             town.Velocity = new Vector2(0f, 0f);
             town.Midpoint = new Vector2(town.Texture.Width / 2, town.Texture.Height / 2);
             town.Rotation = 0.0f;
             town.SrcRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
-            town.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
-                town.SrcRectangle.Width, town.SrcRectangle.Height);
-            town.OwnedBy = Owners.ENEMY;
+            town.DestRectangle = new Rectangle(0, 0, town.Texture.Width, town.Texture.Height);
+            town.DestRectangle.X = (int)(town.Position.X - town.Midpoint.X);
+            town.DestRectangle.Y = (int)(town.Position.Y - town.Midpoint.Y);
+            town.Owner = Owners.ENEMY;
 
             // Set Properties in NodeEntity
             town.HasResourceStructure = true;
@@ -149,9 +153,10 @@ namespace NobleQuest.Entity
             //grassNode.Midpoint = new Vector2(0f, 0f);
             grassNode.Rotation = 0.0f;
             grassNode.SrcRectangle = new Rectangle(0, 0, grassNode.Texture.Width, grassNode.Texture.Height);
-            grassNode.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
-                grassNode.SrcRectangle.Width, grassNode.SrcRectangle.Height);
-            grassNode.OwnedBy = Owners.NEUTRAL;
+            grassNode.DestRectangle = new Rectangle(0, 0, grassNode.Texture.Width, grassNode.Texture.Height);
+            grassNode.DestRectangle.X = (int)(grassNode.Position.X - grassNode.Midpoint.X);
+            grassNode.DestRectangle.Y = (int)(grassNode.Position.Y - grassNode.Midpoint.Y);
+            grassNode.Owner = Owners.NEUTRAL;
 
             // Set Properties in NodeEntity
             grassNode.HasResourceStructure = false;
@@ -168,7 +173,7 @@ namespace NobleQuest.Entity
         public DynamicEntity GetInfantryEntity(NobleQuestGame game, Owners OwnedBy, GameEntity town)
         {
             // Instantiate and Set Properties in GameEntity
-            InfantryEntity infantryEntity = new InfantryEntity();
+            InfantryEntity infantryEntity = new InfantryEntity(game);
 
             switch (OwnedBy)
             {
@@ -192,15 +197,21 @@ namespace NobleQuest.Entity
             infantryEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
                 infantryEntity.SrcRectangle.Width, infantryEntity.SrcRectangle.Height);
             infantryEntity.Game = game;
-            infantryEntity.OwnedBy = OwnedBy;
+            infantryEntity.Owner = OwnedBy;
+            infantryEntity.State = DynamicEntity.States.STOPPED;
 
             // Set Properties in Dynamic Entity
-            // infantryEntity.HitPoints = 100;
             infantryEntity.Location = (NodeEntity)town;
-            // infantryEntity.Destination = null;
-            // infantryEntity.Moving = false;
 
-            
+            if (town.TargetEntity != null)
+            {
+                infantryEntity.State = DynamicEntity.States.ATTACKING;
+                infantryEntity.TargetEntity = town.TargetEntity;
+                infantryEntity.Destination = town.TargetEntity.Location;
+
+                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.TargetEntity = infantryEntity;                
+            }            
 
             game.DynamicEntityList.Add(infantryEntity);
 
@@ -210,7 +221,7 @@ namespace NobleQuest.Entity
         public WorkerEntity GetWorkerEntity(NobleQuestGame game, bool playerOwned, TownNode town)
         {
             // Instantiate and Set Properties in GameEntity
-            WorkerEntity workerEntity = new WorkerEntity();
+            WorkerEntity workerEntity = new WorkerEntity(game);
             workerEntity.Texture = game.Content.Load<Texture2D>("Worker");
             workerEntity.Position = town.Position;
             workerEntity.Velocity = new Vector2(0f, 0f);

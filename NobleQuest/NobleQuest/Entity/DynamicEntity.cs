@@ -25,17 +25,17 @@ namespace NobleQuest.Entity
         public bool IgnoresOrders = false;
         public bool IsWorker = false;
 
-        public DynamicEntity TargetEntity;
+        public float TotalAttackTime = 0.0f;
+        public float AttackCooldown = 1.0f;
 
-        public int HitPointMax;
-        public int HitPoint;
-        public int Damage;
-
-        public Texture2D HitPointBarBackground;
-        public Texture2D HitPointBar;        
+        public HitPointBarEntity HitBar;
 
         public DynamicEntity()
+        { }
+
+        public DynamicEntity(NobleQuestGame Game)
         {
+            this.Game = Game;
             State = States.STOPPED;
             Direction = Directions.RIGHT;
 
@@ -43,12 +43,19 @@ namespace NobleQuest.Entity
             HitPoint = 0;
             Damage = 0;
 
-            HitPointBarBackground = this.Game.Content.Load<Texture2D>("HitPointBackground");
-            HitPointBar = this.Game.Content.Load<Texture2D>("HitPointBar");
+            HitBar = new HitPointBarEntity(this.Game);
+            HitBar.AssociatedEntity = this;
         }
 
         public override void Update(GameTime gameTime)
         {
+            this.HitBar.Update(gameTime);
+
+            if (this.HitPoint <= 0)
+            {
+                this.RemoveFromGame();
+            }
+
             if (this.Location.Order == Orders.HALT
                 && !this.IgnoresOrders)
             {
@@ -60,19 +67,26 @@ namespace NobleQuest.Entity
                 case States.STOPPED:
                     // Determine Destination
                     this.DetermineDestination();
+                    if (this.Destination.Occupant != null
+                        && this.Destination.Occupant.Owner == this.Owner)
+                    {
+                        return;
+                    }
                     if (CanMoveToNonOwned)
                     {
                         this.SetVelocityAndRotation();
                         State = States.MOVING;
                         IsAtDestination = false;
+                        Location.Occupant = null;
                     }
-                    else
+                    else if (!CanMoveToNonOwned)
                     {
-                        if (Destination.OwnedBy == this.OwnedBy)
+                        if (Destination.Owner == this.Owner)
                         {
                             this.SetVelocityAndRotation();
                             State = States.MOVING;
                             IsAtDestination = false;
+                            Location.Occupant = null;
                         }
                         else if (!Location.isTown)
                         {
@@ -82,12 +96,18 @@ namespace NobleQuest.Entity
                     break;
                 case States.MOVING:
                     // Update Position, DestRectangle, etc.
-                    this.Position += this.Velocity;
-                    this.DestRectangle.X = (int)this.Position.X;
-                    this.DestRectangle.Y = (int)this.Position.Y;
-                    if (ArrivedAtDestination())
+                    if (Destination.Occupant != null
+                        && Destination.Occupant.Owner == this.Owner)
                     {
                         StopEntity();
+                    }
+                    this.Position += this.Velocity;
+                    this.DestRectangle.X = (int)(this.Position.X - this.Midpoint.X);
+                    this.DestRectangle.Y = (int)(this.Position.Y - this.Midpoint.Y);
+                    if (ArrivedAtDestination())
+                    {
+                        Destination.Occupant = this;
+                        StopEntity();                        
                     }
                     break;
                 default:
@@ -101,7 +121,7 @@ namespace NobleQuest.Entity
         {
             // Check for Preferred Path Entity
             if (Location.PreferredPathEntity != null
-                && Location.OwnedBy == this.OwnedBy
+                && Location.Owner == this.Owner
                 && !IsIgnoringPreferredPath)
             {
                 switch (Direction)
@@ -254,7 +274,7 @@ namespace NobleQuest.Entity
         {
             State = States.STOPPED;
             this.Location = this.Destination;
-            this.Position = this.Location.Position;
+            //this.Position = this.Location.Position;
             this.Destination = null;
             IsAtDestination = true;
         }
@@ -275,12 +295,12 @@ namespace NobleQuest.Entity
         {
             base.Draw(spriteBatch);
 
+            this.HitBar.Draw(spriteBatch);
+
             if (HitPointMax > 0)
             {
                 return;
             }
-
-
         }
 
         public virtual void HandleCollision(TownNode town) { }
@@ -289,6 +309,10 @@ namespace NobleQuest.Entity
 
         public virtual void HandleCollision(DynamicEntity dynamic) { }
 
-        public virtual void Attack(DynamicEntity target) { }
+        public virtual void Attack(DynamicEntity target, GameTime gameTime) { }
+
+        public virtual void Attack(TownNode target, GameTime gameTime) { }
+
+        public virtual void RemoveFromGame() { }
     }
 }

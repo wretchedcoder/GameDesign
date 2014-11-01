@@ -13,8 +13,12 @@ namespace NobleQuest.Entity
     {
         public HashSet<NodeEntity> nodesVisited;
 
-        public WorkerEntity()
+        public WorkerEntity(NobleQuestGame Game) : base(Game)
         {
+            HitPointMax = 100;
+            HitPoint = 100;
+            Damage = 5;
+
             nodesVisited = new HashSet<NodeEntity>();
             this.CanMoveToNonOwned = false;
             this.IgnoresOrders = true;
@@ -26,13 +30,36 @@ namespace NobleQuest.Entity
         {
             base.Update(gameTime);
 
+            if (this.Location.Owner != this.Owner
+                || ((this.State == States.MOVING) 
+                   && (this.Destination.Owner != this.Owner)))
+            {
+                this.Game.DynamicEntityList.Remove(this);
+            }
+
+            if (this.State == States.ATTACKING)
+            {
+                this.Velocity = Vector2.Zero;
+                this.Attack(TargetEntity, gameTime);
+            }
+
+            if (HitPoint <= 0)
+            {
+                this.Game.DynamicEntityList.Remove(this);
+                if (TargetEntity != null)
+                {
+                    TargetEntity.SetVelocityAndRotation();
+                    TargetEntity.State = States.MOVING;
+                    TargetEntity.TargetEntity = null;
+                }
+            }
         }
         public override void HandleCollision(TownNode town) 
         {
             int nodesVisitedCount = nodesVisited.Count;
             nodesVisitedCount = ((nodesVisitedCount) * (nodesVisitedCount + 1)) / 2;
 
-            if (this.OwnedBy == Owners.PLAYER)
+            if (this.Owner == Owners.PLAYER)
             {
                 this.Game.Player.Resources.Gold += nodesVisitedCount;
             }
@@ -50,7 +77,7 @@ namespace NobleQuest.Entity
                 return;
             }
 
-            if (node.OwnedBy == this.OwnedBy)
+            if (node.Owner == this.Owner)
             {
                 nodesVisited.Add(node);
             }

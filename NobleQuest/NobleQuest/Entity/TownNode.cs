@@ -11,9 +11,47 @@ namespace NobleQuest.Entity
 {
     public class TownNode : NodeEntity
     {
-        public TownNode(NobleQuestGame Game) : base(Game)
+        public HitPointBarEntity HitBar;
+
+        public TownNode(NobleQuestGame Game, Owners Owner) : base(Game)
         {
+            this.HitPointMax = 1000;
+            this.HitPoint = 1000;
+
+            this.Owner = Owner;
+
+            this.HitBar = new HitPointBarEntity(this.Game);
+            this.HitBar.AssociatedEntity = this;
+            this.HitBar.Background = 
+                this.Game.Content.Load<Texture2D>("TownHitBarBackground");
+            this.HitBar.Foreground =
+                this.Game.Content.Load<Texture2D>("TownHitBar");
+            this.HitBar.UpdatePosition = false;
+            if (this.Owner == Owners.PLAYER)
+            {
+                this.HitBar.Position.X = 0;
+                this.HitBar.Position.Y = 0;
+            }
+            else
+            {
+                this.HitBar.Position.X = 
+                    this.Game.Graphics.PreferredBackBufferWidth - this.HitBar.Background.Width;
+                this.HitBar.Position.Y = 0;
+                this.HitBar.InvertDirection = true;
+            }
             
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            this.HitBar.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            this.HitBar.Draw(spriteBatch);
         }
     }
 }

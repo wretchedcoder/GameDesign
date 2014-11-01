@@ -14,8 +14,6 @@ namespace NobleQuest.Entity
 
     public class NodeEntity : GameEntity
     {        
-        public Owners Owner;
-
         public bool HasResourceStructure;
         public bool HasFort;
         public List<PathEntity> LeftPaths;
@@ -28,6 +26,7 @@ namespace NobleQuest.Entity
         public PathSelectionEntity PathSelectionEntity;
         public GameEntity OrderEntity;
         public bool IsOccupied;
+        public DynamicEntity Occupant;
 
         public Texture2D PlayerNodeTexture;
         public Texture2D EnemyNodeTexture;
@@ -117,12 +116,15 @@ namespace NobleQuest.Entity
             {
                 this.Game.PathSelectionList.Remove(PathSelectionEntity);
                 PathSelectionEntity = null;
-            }  
-            Order = Orders.NONE;
-            if (OrderEntity != null)
+            } 
+            if (this.Owner != Owners.NEUTRAL)
             {
-                this.Game.OrderList.Remove(OrderEntity);
-                OrderEntity = null;
+                Order = Orders.NONE;
+                if (OrderEntity != null)
+                {
+                    this.Game.OrderList.Remove(OrderEntity);
+                    OrderEntity = null;
+                }
             }
         }
 
@@ -130,7 +132,7 @@ namespace NobleQuest.Entity
         {
             if (!this.isTown)
             {
-                switch (OwnedBy)
+                switch (Owner)
                 {
                     case Owners.PLAYER:
                         this.Texture = this.PlayerNodeTexture;

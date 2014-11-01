@@ -136,7 +136,7 @@ namespace NobleQuest
                     {
                         int NodeXOffset = (int)NodeEntityList[i].Midpoint.X;
                         int NodeYOffset = (int)NodeEntityList[i].Midpoint.Y;
-                        if (NodeEntityList[i].DestRectangle.Contains(NewMouseState.X + NodeXOffset, NewMouseState.Y + NodeYOffset))
+                        if (NodeEntityList[i].DestRectangle.Contains(NewMouseState.X, NewMouseState.Y))
                         {
                             SelectionEntity.setSelectedNode(NodeEntityList[i]);
                             break;
@@ -154,7 +154,8 @@ namespace NobleQuest
             {
                 if (OldKeyState.IsKeyDown(Keys.Tab) 
                     && NewKeyState.IsKeyUp(Keys.Tab)
-                    && SelectionEntity.SelectedNode != null)
+                    && SelectionEntity.SelectedNode != null
+                    && SelectionEntity.SelectedNode.Owner == Owners.PLAYER)
                 {
                     SelectionEntity.SelectedNode.IncrementPreferredPath();
                 }

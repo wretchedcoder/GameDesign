@@ -40,6 +40,7 @@
     <Compile Include="Entity\EntityFactory.cs" />
     <Compile Include="Entity\Fort.cs" />
     <Compile Include="Entity\GameEntity.cs" />
+    <Compile Include="Entity\HItPointBarEntity.cs" />
     <Compile Include="Entity\InfantryEntity.cs" />
     <Compile Include="Entity\MapBuilder.cs" />
     <Compile Include="Entity\NodeEntity.cs" />
@@ -80,6 +81,12 @@
     <Content Include="Content\HaltOrderTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\HitPointBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\HitPointBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\NeutralNodeTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -102,6 +109,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\SelectionArrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\TownHitBar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\TownHitBarBackground.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Worker.png">

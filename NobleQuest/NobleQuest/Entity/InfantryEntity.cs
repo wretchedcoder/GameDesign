@@ -11,11 +11,12 @@ namespace NobleQuest.Entity
 {
     public class InfantryEntity : Entity.DynamicEntity
     {
-        public InfantryEntity()
+        public InfantryEntity(NobleQuestGame Game) : base(Game)
         {
             HitPointMax = 100;
             HitPoint = 100;
-            Damage = 1;
+            Damage = 20;
+            this.Game = Game;            
         }
 
         public override void Update(GameTime gameTime)
@@ -25,23 +26,27 @@ namespace NobleQuest.Entity
             if (this.State == States.ATTACKING)
             {
                 this.Velocity = Vector2.Zero;
-                this.Attack(TargetEntity);
-            }
-
-            if (HitPoint <= 0)
-            {
-                this.Game.DynamicEntityList.Remove(this);
-                TargetEntity.SetVelocityAndRotation();
-                TargetEntity.State = States.MOVING;
-                TargetEntity.TargetEntity = null;
+                if (TargetEntity != null)
+                {
+                    this.Attack(TargetEntity, gameTime);
+                }
+                else if (TargetTown != null)
+                {
+                    this.Attack(TargetTown, gameTime);
+                }
             }
         }
 
         
 
         public override void HandleCollision(TownNode town) 
-        { 
-            
+        {
+            if (town.Owner != this.Owner)
+            {
+                this.State = States.ATTACKING;
+                this.TargetTown = town;
+                town.TargetEntity = this;
+            }
         }
 
         public override void HandleCollision(NodeEntity node) 
@@ -52,20 +57,26 @@ namespace NobleQuest.Entity
                 return;
             }
 
-            switch (OwnedBy)
+            if (node.Occupant != null
+                && node.Occupant.Owner != this.Owner)
+            {
+                return;
+            }
+
+            switch (Owner)
             {
                 case Owners.PLAYER:
-                    if (node.OwnedBy != Owners.PLAYER)
+                    if (node.Owner != Owners.PLAYER)
                     {
-                        node.OwnedBy = Owners.PLAYER;
                         node.ClearPreferred();
+                        node.Owner = Owners.PLAYER;                        
                     }
                     break;
                 case Owners.ENEMY:
-                    if (node.OwnedBy != Owners.ENEMY)
+                    if (node.Owner != Owners.ENEMY)
                     {
-                        node.OwnedBy = Owners.ENEMY;
                         node.ClearPreferred();
+                        node.Owner = Owners.ENEMY;
                     }
                     break;
                 default:
@@ -75,18 +86,50 @@ namespace NobleQuest.Entity
 
         public override void HandleCollision(DynamicEntity dynamic) 
         { 
-            if (dynamic.OwnedBy != this.OwnedBy)
+            if (dynamic.Owner != this.Owner)
             {
                 this.State = States.ATTACKING;
+                this.TargetEntity = dynamic;
+
                 dynamic.State = States.ATTACKING;
-                TargetEntity = dynamic;
-                TargetEntity.TargetEntity = dynamic;
+                dynamic.TargetEntity = this;
             }
         }
 
-        public override void Attack(DynamicEntity target) 
+        public override void Attack(DynamicEntity target, GameTime gameTime) 
         {
-            target.HitPoint -= this.Damage;
+            TotalAttackTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            if (TotalAttackTime >= AttackCooldown)
+            {
+                target.HitPoint -= this.Damage;
+                TotalAttackTime -= AttackCooldown;
+            }            
+        }
+
+        public override void Attack(TownNode target, GameTime gameTime)
+        {
+            TotalAttackTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            if (TotalAttackTime >= AttackCooldown)
+            {
+                target.HitPoint -= this.Damage;
+                TotalAttackTime -= AttackCooldown;
+            }
+        }
+
+        public override void RemoveFromGame()
+        {
+            this.Game.DynamicEntityList.Remove(this);
+            this.Location.Occupant = null;
+            if (TargetEntity != null)
+            {
+                TargetEntity.SetVelocityAndRotation();
+                TargetEntity.State = States.MOVING;
+                TargetEntity.TargetEntity = null;
+            }
+            if (TargetTown != null)
+            {
+                TargetTown.TargetEntity = null;
+            }
         }
         
     } // End of InfantryEntity Class

@@ -20,6 +20,10 @@ namespace NobleQuest.Entity
         public NodeEntity[] MiddleLane;
         public NodeEntity[] BottomLane;
 
+        public float TOP_LANE_HEIGHT    = 150.0f;
+        public float MIDDLE_LANE_HEIGHT = 250.0f;
+        public float BOTTOM_LANE_HEIGHT = 350.0f;
+
         public MapBuilder()
         {
             EntityFactory = new EntityFactory();
@@ -39,22 +43,22 @@ namespace NobleQuest.Entity
             this.Game.Player.Resources = EntityFactory.GetResourceEntity(game, new Vector2(0f, hudYOffset), true);
             this.Game.Enemy.Resources = EntityFactory.GetResourceEntity(game, new Vector2(0f, hudYOffset), false);
 
-            ThisGameEntity = EntityFactory.GetPlayerTown(this.Game, new Vector2(100f, 200f));
+            ThisGameEntity = EntityFactory.GetPlayerTown(this.Game, new Vector2(100f, MIDDLE_LANE_HEIGHT));
             this.Game.Player.Town = (TownNode)ThisGameEntity;
             this.Game.NodeEntityList.Add((NodeEntity)this.Game.Player.Town);
 
-            ThisGameEntity = EntityFactory.GetEnemyTown(this.Game, new Vector2(700f, 200f));
+            ThisGameEntity = EntityFactory.GetEnemyTown(this.Game, new Vector2(700f, MIDDLE_LANE_HEIGHT));
             this.Game.Enemy.Town = (TownNode)ThisGameEntity;
             this.Game.NodeEntityList.Add((NodeEntity)this.Game.Enemy.Town);
 
             // Build Top Lane
-            this.BuildLane(TopLane, 100.0f, 100.0f, game.Player.Town, game.Enemy.Town);
+            this.BuildLane(TopLane, 100.0f, TOP_LANE_HEIGHT, game.Player.Town, game.Enemy.Town);
 
             // Build Middle Lane
-            this.BuildLane(MiddleLane, 100.0f, 200.0f, game.Player.Town, game.Enemy.Town);
+            this.BuildLane(MiddleLane, 100.0f, MIDDLE_LANE_HEIGHT, game.Player.Town, game.Enemy.Town);
 
             // Build Bottom Lane
-            this.BuildLane(BottomLane, 100.0f, 300.0f, game.Player.Town, game.Enemy.Town);
+            this.BuildLane(BottomLane, 100.0f, BOTTOM_LANE_HEIGHT, game.Player.Town, game.Enemy.Town);
 
             // Crossing Paths
             this.buildCrossPaths();
