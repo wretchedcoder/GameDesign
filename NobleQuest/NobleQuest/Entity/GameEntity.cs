@@ -20,6 +20,7 @@ namespace NobleQuest
         public Vector2 Position;
         public Vector2 Velocity;
         public Vector2 Midpoint;
+        public float Scale = 1.0f;
         public float Rotation;
         public Vector2 Offset;
         public Rectangle SrcRectangle;
@@ -57,7 +58,7 @@ namespace NobleQuest
                 Color.White,
                 this.Rotation,
                 this.Midpoint,
-                1.0f,
+                this.Scale,
                 SpriteEffects.None,
                 1.0f);
             }            

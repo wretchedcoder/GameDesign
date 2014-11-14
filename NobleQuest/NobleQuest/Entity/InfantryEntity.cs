@@ -11,6 +11,8 @@ namespace NobleQuest.Entity
 {
     public class InfantryEntity : Entity.DynamicEntity
     {
+        
+
         public InfantryEntity(NobleQuestGame Game) : base(Game)
         {
             HitPointMax = 100;

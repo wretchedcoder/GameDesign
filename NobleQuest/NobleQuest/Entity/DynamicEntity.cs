@@ -11,6 +11,8 @@ namespace NobleQuest.Entity
 {
     public class DynamicEntity : GameEntity
     {
+        public static int DIMENSION = 32;
+        
         public enum States { STOPPED, MOVING, ATTACKING };
         public States State;
 
@@ -29,6 +31,11 @@ namespace NobleQuest.Entity
         public float AttackCooldown = 1.0f;
 
         public HitPointBarEntity HitBar;
+
+        public float TotalTimePassed = 0f;
+        public float FrameRate = 1.0f / 24.0f;
+        public int CurrentFrame = 0;
+        public int FRAME_MAX = 20;
 
         public DynamicEntity()
         { }
@@ -50,6 +57,21 @@ namespace NobleQuest.Entity
         public override void Update(GameTime gameTime)
         {
             this.HitBar.Update(gameTime);
+
+            // Animation Logic
+            TotalTimePassed += gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            if (TotalTimePassed > FrameRate)
+            {
+                TotalTimePassed -= FrameRate;
+                if ( CurrentFrame >= 19)
+                {
+                    CurrentFrame = -1;
+                }
+                CurrentFrame++;
+            }
+
+            SrcRectangle.X = CurrentFrame * DIMENSION;
+            SrcRectangle.Y = (int)State * DIMENSION;
 
             if (this.HitPoint <= 0)
             {

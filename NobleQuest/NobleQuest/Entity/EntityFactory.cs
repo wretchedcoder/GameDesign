@@ -191,9 +191,9 @@ namespace NobleQuest.Entity
 
             infantryEntity.Position = town.Position;
             infantryEntity.Velocity = new Vector2(0f, 0f);
-            infantryEntity.Midpoint = new Vector2(infantryEntity.Texture.Width / 2, infantryEntity.Texture.Height / 2);
+            infantryEntity.Midpoint = new Vector2(DynamicEntity.DIMENSION / 2, DynamicEntity.DIMENSION / 2);
             infantryEntity.Rotation = 0.0f;
-            infantryEntity.SrcRectangle = new Rectangle(0, 0, infantryEntity.Texture.Width, infantryEntity.Texture.Height);
+            infantryEntity.SrcRectangle = new Rectangle(0, 0, DynamicEntity.DIMENSION, DynamicEntity.DIMENSION);
             infantryEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
                 infantryEntity.SrcRectangle.Width, infantryEntity.SrcRectangle.Height);
             infantryEntity.Game = game;
@@ -251,6 +251,70 @@ namespace NobleQuest.Entity
             game.DynamicEntityList.Add(workerEntity);
 
             return workerEntity;
+        }
+
+        public GameEntity GetBackgroundEntity(NobleQuestGame game)
+        {
+            // Instantiate and Set Properties in GameEntity
+            GameEntity NewEntity = new GameEntity();
+
+            NewEntity.Texture = game.Content.Load<Texture2D>("Background");
+            NewEntity.Game = game;
+            NewEntity.Position = Vector2.Zero;
+            NewEntity.Velocity = new Vector2(0f, 0f);
+            NewEntity.Midpoint = Vector2.Zero;
+            NewEntity.Rotation = 0.0f;
+            NewEntity.SrcRectangle = new Rectangle(0, 0, NewEntity.Texture.Width, NewEntity.Texture.Height);
+            NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, (int)NewEntity.Position.Y,
+                NewEntity.SrcRectangle.Width, NewEntity.SrcRectangle.Height);            
+
+            return NewEntity;
+        }
+
+        public GameEntity GetTitleTextEntity(NobleQuestGame game)
+        {
+            // Instantiate and Set Properties in GameEntity
+            GameEntity NewEntity = new GameEntity();
+
+            NewEntity.Texture = game.Content.Load<Texture2D>("TitleText");
+            NewEntity.Game = game;
+            NewEntity.Position = Vector2.Zero;
+            NewEntity.Position.X = game.Graphics.PreferredBackBufferWidth / 2.0f;
+            NewEntity.Position.Y = game.Graphics.PreferredBackBufferHeight / 3.0f;
+            NewEntity.Velocity = new Vector2(0f, 0f);
+            NewEntity.Midpoint = Vector2.Zero;
+            NewEntity.Midpoint.X = NewEntity.Texture.Width / 2;
+            NewEntity.Midpoint.Y = NewEntity.Texture.Height / 2;
+            NewEntity.Rotation = 0.0f;
+            NewEntity.Scale = 1.35f;
+            NewEntity.SrcRectangle = new Rectangle(0, 0, NewEntity.Texture.Width, NewEntity.Texture.Height);
+            NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, (int)NewEntity.Position.Y,
+                NewEntity.SrcRectangle.Width, NewEntity.SrcRectangle.Height);
+
+            return NewEntity;
+        }
+
+        public GameEntity GetStartTextEntity(NobleQuestGame game)
+        {
+            // Instantiate and Set Properties in GameEntity
+            GameEntity NewEntity = new GameEntity();
+
+            NewEntity.Texture = game.Content.Load<Texture2D>("StartText");
+            NewEntity.Game = game;
+            NewEntity.Position = Vector2.Zero;
+            NewEntity.Position.X = game.Graphics.PreferredBackBufferWidth / 2.0f;
+            NewEntity.Position.Y = (game.Graphics.PreferredBackBufferHeight / 3.0f) * 2.0f;
+            NewEntity.Velocity = new Vector2(0f, 0f);
+            NewEntity.Midpoint = Vector2.Zero;
+            NewEntity.Midpoint.X = NewEntity.Texture.Width / 2;
+            NewEntity.Midpoint.Y = NewEntity.Texture.Height / 2;
+            NewEntity.Rotation = 0.0f;
+            NewEntity.Scale = 0.75f;
+            NewEntity.SrcRectangle = new Rectangle(0, 0, NewEntity.Texture.Width, NewEntity.Texture.Height);
+            NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, (int)NewEntity.Position.Y,
+                NewEntity.SrcRectangle.Width, NewEntity.SrcRectangle.Height);
+
+            return NewEntity;
         }
 
         

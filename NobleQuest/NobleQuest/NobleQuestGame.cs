@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using NobleQuest.Entity;
 #endregion
 
@@ -17,8 +19,19 @@ namespace NobleQuest
     /// </summary>
     public class NobleQuestGame : Game
     {
+        public bool GameStarted = false;
+        public bool GameWon = false;
+        public bool GameLost = false;
+
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch;
+
+        public GameEntity BackgroundEntity;
+        public Song Song;
+
+        public GameEntity TitleTextEntity;
+        public GameEntity StartTextEntity;
+
         public List<GameEntity> GameEntityList;
         public List<NodeEntity> NodeEntityList;
         public List<PathEntity> PathEntityList;
@@ -84,7 +97,26 @@ namespace NobleQuest
 
             SelectionEntity = new SelectionEntity(this);
 
+            this.InitTitleScreen();
+
+            
+            Song = Content.Load<Song>("Minstrel Guild");
+            MediaPlayer.Play(Song);
+            
+            
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+
+            player.SoundLocation = "Content/Minstrel Guild.mp3";
+            player.Play();
+
             base.Initialize();
+        }
+
+        public void InitTitleScreen()
+        {
+            BackgroundEntity = EntityFactory.GetBackgroundEntity(this);
+            TitleTextEntity = EntityFactory.GetTitleTextEntity(this);
+            StartTextEntity = EntityFactory.GetStartTextEntity(this);
         }
 
         /// <summary>
@@ -123,13 +155,52 @@ namespace NobleQuest
                 Exit();
             }
 
+            if (this.GameStarted)
+            {
+                if (this.GameWon)
+                {
+
+                }
+                else if (this.GameLost)
+                {
+
+                }
+                else
+                {
+                    this.UpdateGame(gameTime);
+                }
+            }
+            else
+            {
+                this.UpdateTitle();
+            }           
+
+            base.Update(gameTime);
+        }
+
+        public void UpdateTitle()
+        {
+            NewMouseState = Mouse.GetState();
+            if (OldMouseState != null)
+            {
+                if (OldMouseState.LeftButton == ButtonState.Pressed
+                    && NewMouseState.LeftButton == ButtonState.Released)
+                {
+                    this.GameStarted = true;
+                }
+            }
+            OldMouseState = NewMouseState;
+        }
+
+        public void UpdateGame(GameTime gameTime)
+        {
             TimeCounter += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
             #region Get Selected Node
             NewMouseState = Mouse.GetState();
             if (OldMouseState != null)
             {
-                if (OldMouseState.LeftButton == ButtonState.Pressed 
+                if (OldMouseState.LeftButton == ButtonState.Pressed
                     && NewMouseState.LeftButton == ButtonState.Released)
                 {
                     for (int i = NodeEntityList.Count - 1; i >= 0; i--)
@@ -143,7 +214,7 @@ namespace NobleQuest
                         }
                         SelectionEntity.SelectedNode = null;
                     }
-                }                
+                }
             }
             OldMouseState = NewMouseState;
             #endregion Get Selected Node
@@ -152,7 +223,7 @@ namespace NobleQuest
             NewKeyState = Keyboard.GetState();
             if (OldKeyState != null)
             {
-                if (OldKeyState.IsKeyDown(Keys.Tab) 
+                if (OldKeyState.IsKeyDown(Keys.Tab)
                     && NewKeyState.IsKeyUp(Keys.Tab)
                     && SelectionEntity.SelectedNode != null
                     && SelectionEntity.SelectedNode.Owner == Owners.PLAYER)
@@ -164,7 +235,7 @@ namespace NobleQuest
                     && NewKeyState.IsKeyUp(Keys.LeftShift)
                     && SelectionEntity.SelectedNode != null)
                 {
-                    SelectionEntity.SelectedNode.ClearPreferred() ;
+                    SelectionEntity.SelectedNode.ClearPreferred();
                 }
 
                 if (OldKeyState.IsKeyDown(Keys.W)
@@ -176,7 +247,7 @@ namespace NobleQuest
             }
             OldKeyState = NewKeyState;
 
-            
+
             this.Player.Update(gameTime);
             this.Enemy.Update(gameTime);
             this.Player.Resources.Update(gameTime);
@@ -194,10 +265,10 @@ namespace NobleQuest
                 DynamicEntityList[i].Update(gameTime);
             }
             SelectionEntity.Update(gameTime);
-           
-            
+
+
             // Check for Dynamic Entity Collisions
-            for (int i = DynamicEntityList.Count - 1; i >= 0; i-- )
+            for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
             {
                 DynamicEntity dynamicEntity = DynamicEntityList[i];
                 if (dynamicEntity.DestRectangle.Intersects(Player.Town.DestRectangle))
@@ -208,7 +279,7 @@ namespace NobleQuest
                 {
                     dynamicEntity.HandleCollision(Enemy.Town);
                 }
-                for (int j = NodeEntityList.Count - 1; j >= 0; j-- )
+                for (int j = NodeEntityList.Count - 1; j >= 0; j--)
                 {
                     NodeEntity nodeEntity = NodeEntityList[j];
                     if (dynamicEntity.DestRectangle.Intersects(nodeEntity.DestRectangle))
@@ -225,9 +296,6 @@ namespace NobleQuest
                     }
                 }
             }
-            
-
-            base.Update(gameTime);
         }
 
         /// <summary>
@@ -239,9 +307,42 @@ namespace NobleQuest
             GraphicsDevice.Clear(Color.Ivory);
 
             this.SpriteBatch.Begin();
-            // this.Player.Resources.Draw(this.SpriteBatch);
-            // this.Enemy.Resources.Draw(this.SpriteBatch);
-            for (int i = PathEntityList.Count - 1; i >= 0; i-- )
+            this.BackgroundEntity.Draw(this.SpriteBatch);
+
+            if (this.GameStarted)
+            {
+                if (this.GameWon)
+                {
+
+                }
+                else if (this.GameLost)
+                {
+
+                }
+                else
+                {
+                    this.DrawGame();
+                }
+            }
+            else
+            {
+                this.DrawTitle();
+            }
+            
+            this.SpriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public void DrawTitle()
+        {
+            TitleTextEntity.Draw(this.SpriteBatch);
+            StartTextEntity.Draw(this.SpriteBatch);
+        } // End DrawTitle()
+
+        public void DrawGame()
+        {
+            for (int i = PathEntityList.Count - 1; i >= 0; i--)
             {
                 PathEntityList[i].Draw(this.SpriteBatch);
             }
@@ -262,9 +363,6 @@ namespace NobleQuest
                 OrderList[i].Draw(this.SpriteBatch);
             }
             SelectionEntity.Draw(this.SpriteBatch);
-            this.SpriteBatch.End();
-
-            base.Draw(gameTime);
-        }
+        } // End DrawGame()
     }
 }
