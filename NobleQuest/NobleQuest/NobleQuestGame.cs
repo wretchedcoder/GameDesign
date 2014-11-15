@@ -31,6 +31,11 @@ namespace NobleQuest
 
         public GameEntity TitleTextEntity;
         public GameEntity StartTextEntity;
+        public GameEntity VictoryTextEntity;
+        public GameEntity DefeatTextEntity;
+
+        public float TextTime = 0.0f;
+        public float TextCooldown = 5.0f;
 
         public List<GameEntity> GameEntityList;
         public List<NodeEntity> NodeEntityList;
@@ -66,17 +71,7 @@ namespace NobleQuest
             Graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
-            GameEntityList = new List<GameEntity>();
-            NodeEntityList = new List<NodeEntity>();
-            PathEntityList = new List<PathEntity>();
-            DynamicEntityList = new List<DynamicEntity>();
-            PathSelectionList = new List<PathSelectionEntity>();
-            OrderList = new List<GameEntity>();
-            this.EntityFactory = new EntityFactory();
-            this.Player = new Player();
-            this.Player.Game = this;
-            this.Enemy = new Enemy();
-            this.Enemy.Game = this;            
+            GameEntityList = new List<GameEntity>();           
 
             this.Random = new Random();
         }
@@ -91,25 +86,32 @@ namespace NobleQuest
         {
             SpriteFont = Content.Load<SpriteFont>("Arial");
             BlockBar = Content.Load<Texture2D>("BlockBar");
-            MapBuilder MapBuilder = new MapBuilder();
-
-            MapBuilder.BuildMap(this);
-
             SelectionEntity = new SelectionEntity(this);
+
+            this.buildMap();
 
             this.InitTitleScreen();
 
-            
-            Song = Content.Load<Song>("Minstrel Guild");
-            MediaPlayer.Play(Song);
-            
-            
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
-
-            player.SoundLocation = "Content/Minstrel Guild.mp3";
-            player.Play();
-
             base.Initialize();
+        }
+
+        public void buildMap()
+        {
+            GameEntityList = new List<GameEntity>();
+            NodeEntityList = new List<NodeEntity>();
+            PathEntityList = new List<PathEntity>();
+            DynamicEntityList = new List<DynamicEntity>();
+            PathSelectionList = new List<PathSelectionEntity>();
+            OrderList = new List<GameEntity>();
+
+            this.EntityFactory = new EntityFactory();
+            this.Player = new Player();
+            this.Player.Game = this;
+            this.Enemy = new Enemy();
+            this.Enemy.Game = this; 
+
+            MapBuilder MapBuilder = new MapBuilder();
+            MapBuilder.BuildMap(this);            
         }
 
         public void InitTitleScreen()
@@ -117,6 +119,9 @@ namespace NobleQuest
             BackgroundEntity = EntityFactory.GetBackgroundEntity(this);
             TitleTextEntity = EntityFactory.GetTitleTextEntity(this);
             StartTextEntity = EntityFactory.GetStartTextEntity(this);
+
+            VictoryTextEntity = EntityFactory.GetVictoryTextEntity(this);
+            DefeatTextEntity = EntityFactory.GetDefeatTextEntity(this);
         }
 
         /// <summary>
@@ -159,11 +164,11 @@ namespace NobleQuest
             {
                 if (this.GameWon)
                 {
-
+                    this.UpdateEndText(gameTime);
                 }
                 else if (this.GameLost)
                 {
-
+                    this.UpdateEndText(gameTime);
                 }
                 else
                 {
@@ -298,6 +303,19 @@ namespace NobleQuest
             }
         }
 
+        public void UpdateEndText(GameTime gameTime)
+        {
+            this.TextTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            if (this.TextTime >= this.TextCooldown)
+            {
+                this.GameStarted = false;
+                this.GameWon = false;
+                this.GameLost = false;
+                this.TextTime = 0.0f;
+                this.buildMap();
+            }
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -313,11 +331,11 @@ namespace NobleQuest
             {
                 if (this.GameWon)
                 {
-
+                    this.DrawVictory();
                 }
                 else if (this.GameLost)
                 {
-
+                    this.DrawDefeat();
                 }
                 else
                 {
@@ -364,5 +382,15 @@ namespace NobleQuest
             }
             SelectionEntity.Draw(this.SpriteBatch);
         } // End DrawGame()
+
+        public void DrawVictory()
+        {
+            VictoryTextEntity.Draw(this.SpriteBatch);
+        } // End DrawVictory()
+
+        public void DrawDefeat()
+        {
+            DefeatTextEntity.Draw(this.SpriteBatch);
+        } // End DrawDefeat();
     }
 }

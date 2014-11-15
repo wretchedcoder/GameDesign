@@ -50,6 +50,11 @@ namespace NobleQuest
         {
             currentTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
+            if (this.Town.HitPoint <= 0)
+            {
+                this.Game.GameLost = true;
+            }
+
             CheckKeyState();
 
         } // End of Update

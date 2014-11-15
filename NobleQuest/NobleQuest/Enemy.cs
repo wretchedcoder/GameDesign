@@ -37,6 +37,10 @@ namespace NobleQuest
                 this.Game.EntityFactory.GetInfantryEntity(Game, Owners.ENEMY, Town);
                 infantryTime -= infantryDelay;
             }
+            if (this.Town.HitPoint <= 0)
+            {
+                this.Game.GameWon = true;
+            }
         }
     }
 }

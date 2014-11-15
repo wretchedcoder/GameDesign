@@ -317,6 +317,52 @@ namespace NobleQuest.Entity
             return NewEntity;
         }
 
+        public GameEntity GetVictoryTextEntity(NobleQuestGame game)
+        {
+            // Instantiate and Set Properties in GameEntity
+            GameEntity NewEntity = new GameEntity();
+
+            NewEntity.Texture = game.Content.Load<Texture2D>("VictoryText");
+            NewEntity.Game = game;
+            NewEntity.Position = Vector2.Zero;
+            NewEntity.Position.X = game.Graphics.PreferredBackBufferWidth / 2.0f;
+            NewEntity.Position.Y = game.Graphics.PreferredBackBufferHeight / 2.0f;
+            NewEntity.Velocity = new Vector2(0f, 0f);
+            NewEntity.Midpoint = Vector2.Zero;
+            NewEntity.Midpoint.X = NewEntity.Texture.Width / 2;
+            NewEntity.Midpoint.Y = NewEntity.Texture.Height / 2;
+            NewEntity.Rotation = 0.0f;
+            NewEntity.Scale = 2.00f;
+            NewEntity.SrcRectangle = new Rectangle(0, 0, NewEntity.Texture.Width, NewEntity.Texture.Height);
+            NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, (int)NewEntity.Position.Y,
+                NewEntity.SrcRectangle.Width, NewEntity.SrcRectangle.Height);
+
+            return NewEntity;
+        }
+
+        public GameEntity GetDefeatTextEntity(NobleQuestGame game)
+        {
+            // Instantiate and Set Properties in GameEntity
+            GameEntity NewEntity = new GameEntity();
+
+            NewEntity.Texture = game.Content.Load<Texture2D>("DefeatText");
+            NewEntity.Game = game;
+            NewEntity.Position = Vector2.Zero;
+            NewEntity.Position.X = game.Graphics.PreferredBackBufferWidth / 2.0f;
+            NewEntity.Position.Y = game.Graphics.PreferredBackBufferHeight / 2.0f;
+            NewEntity.Velocity = new Vector2(0f, 0f);
+            NewEntity.Midpoint = Vector2.Zero;
+            NewEntity.Midpoint.X = NewEntity.Texture.Width / 2;
+            NewEntity.Midpoint.Y = NewEntity.Texture.Height / 2;
+            NewEntity.Rotation = 0.0f;
+            NewEntity.Scale = 2.00f;
+            NewEntity.SrcRectangle = new Rectangle(0, 0, NewEntity.Texture.Width, NewEntity.Texture.Height);
+            NewEntity.DestRectangle = new Rectangle((int)NewEntity.Position.X, (int)NewEntity.Position.Y,
+                NewEntity.SrcRectangle.Width, NewEntity.SrcRectangle.Height);
+
+            return NewEntity;
+        }
+
         
     }// EntityFactory
 }
