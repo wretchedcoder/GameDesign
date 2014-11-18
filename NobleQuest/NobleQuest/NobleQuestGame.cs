@@ -360,6 +360,7 @@ namespace NobleQuest
 
         public void DrawGame()
         {
+            this.Player.Resources.Draw(this.SpriteBatch);
             for (int i = PathEntityList.Count - 1; i >= 0; i--)
             {
                 PathEntityList[i].Draw(this.SpriteBatch);

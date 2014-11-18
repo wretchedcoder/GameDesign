@@ -40,12 +40,16 @@ namespace NobleQuest.Entity
 
             float hudYOffset = game.Graphics.PreferredBackBufferHeight - 225.0f;
 
-            this.Game.Player.Resources = EntityFactory.GetResourceEntity(game, new Vector2(0f, hudYOffset), true);
             this.Game.Enemy.Resources = EntityFactory.GetResourceEntity(game, new Vector2(0f, hudYOffset), false);
 
             ThisGameEntity = EntityFactory.GetPlayerTown(this.Game, new Vector2(100f, MIDDLE_LANE_HEIGHT));
             this.Game.Player.Town = (TownNode)ThisGameEntity;
             this.Game.NodeEntityList.Add((NodeEntity)this.Game.Player.Town);
+
+            Vector2 PlayerResourcePosition = this.Game.Player.Town.HitBar.Position;
+            PlayerResourcePosition.Y += this.Game.Player.Town.HitBar.Background.Height + 5.0f;
+
+            this.Game.Player.Resources = EntityFactory.GetResourceEntity(game, PlayerResourcePosition, true);
 
             ThisGameEntity = EntityFactory.GetEnemyTown(this.Game, new Vector2(700f, MIDDLE_LANE_HEIGHT));
             this.Game.Enemy.Town = (TownNode)ThisGameEntity;

@@ -11,10 +11,9 @@ namespace NobleQuest.Entity
 {
     public class InfantryEntity : Entity.DynamicEntity
     {
-        
-
         public InfantryEntity(NobleQuestGame Game) : base(Game)
         {
+            this.unitType = UnitType.INFANTRY;
             HitPointMax = 100;
             HitPoint = 100;
             Damage = 20;
@@ -45,9 +44,12 @@ namespace NobleQuest.Entity
         {
             if (town.Owner != this.Owner)
             {
-                this.State = States.ATTACKING;
-                this.TargetTown = town;
-                town.TargetEntity = this;
+                if (this.State != States.ATTACKING)
+                {
+                    this.State = States.ATTACKING;
+                    this.TargetTown = town;
+                    town.TargetEntity = this;
+                }
             }
         }
 
@@ -90,11 +92,18 @@ namespace NobleQuest.Entity
         { 
             if (dynamic.Owner != this.Owner)
             {
-                this.State = States.ATTACKING;
-                this.TargetEntity = dynamic;
-
-                dynamic.State = States.ATTACKING;
-                dynamic.TargetEntity = this;
+                if (this.State != States.ATTACKING)
+                {
+                    this.OldState = this.State;
+                    this.State = States.ATTACKING;
+                    this.TargetEntity = dynamic;
+                }
+                if (dynamic.State != States.ATTACKING)
+                {
+                    dynamic.OldState = dynamic.State;
+                    dynamic.State = States.ATTACKING;
+                    dynamic.TargetEntity = this;
+                }
             }
         }
 
@@ -113,24 +122,43 @@ namespace NobleQuest.Entity
             TotalAttackTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
             if (TotalAttackTime >= AttackCooldown)
             {
-                target.HitPoint -= this.Damage;
+                target.HitPoint -= this.Damage + this.GetModifier();
                 TotalAttackTime -= AttackCooldown;
             }
         }
 
-        public override void RemoveFromGame()
+        public override void RemoveFromGame(GameTime gameTime)
         {
             this.Game.DynamicEntityList.Remove(this);
             this.Location.Occupant = null;
             if (TargetEntity != null)
             {
-                TargetEntity.SetVelocityAndRotation();
-                TargetEntity.State = States.MOVING;
+                TargetEntity.State = TargetEntity.OldState;
+                TargetEntity.Update(gameTime);
                 TargetEntity.TargetEntity = null;
             }
             if (TargetTown != null)
             {
                 TargetTown.TargetEntity = null;
+            }
+        }
+
+        public virtual int GetModifier()
+        {
+            if (this.TargetEntity == null)
+            {
+                return 0;
+            }
+            switch(this.TargetEntity.unitType)
+            {
+                case UnitType.ARCHER:
+                    return 20;
+                case UnitType.INFANTRY:
+                    return 0;
+                case UnitType.KNIGHT:
+                    return 0;
+                default:
+                    return 0;
             }
         }
         

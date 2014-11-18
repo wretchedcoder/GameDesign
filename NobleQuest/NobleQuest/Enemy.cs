@@ -21,25 +21,38 @@ namespace NobleQuest
         public bool HasFletchery = false;
         public bool HasArmory = false;
 
-        public float infantryTime = 0.0f;
-        public float infantryDelay = 30.0f;
+        public float DecisionTime = 0.0f;
+        public float DecisionDelay = 30.0f;
+
+        public Dictionary<DynamicEntity, List<NodeEntity>> NewPaths;
+        public List<List<NodeEntity>> PriorityPaths;
 
         public Enemy()
         {
             EntityFactory = new EntityFactory();
+            NewPaths = new Dictionary<DynamicEntity, List<NodeEntity>>();
+            PriorityPaths = new List<List<NodeEntity>>();
         }
 
         public void Update(GameTime gameTime)
         {
-            infantryTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
-            if (infantryTime > infantryDelay)
+            DecisionTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            if (DecisionTime > DecisionDelay)
             {
-                this.Game.EntityFactory.GetInfantryEntity(Game, Owners.ENEMY, Town);
-                infantryTime -= infantryDelay;
+                this.MakeDecision(gameTime);
+                DecisionTime -= DecisionDelay;
             }
             if (this.Town.HitPoint <= 0)
             {
                 this.Game.GameWon = true;
+            }
+        }
+
+        public void MakeDecision(GameTime gameTime)
+        {
+            foreach(DynamicEntity entity in NewPaths.Keys)
+            {
+
             }
         }
     }

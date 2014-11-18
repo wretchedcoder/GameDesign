@@ -67,13 +67,37 @@ namespace NobleQuest
                 if (OldKeyState.IsKeyDown(Keys.A)
                     && NewKeyState.IsKeyUp(Keys.A))
                 {
-                    this.Game.EntityFactory.GetWorkerEntity(this.Game, true, this.Town);
+                    if (this.Resources.BuyUnit())
+                    {
+                        this.Game.EntityFactory.GetArcherEntity(
+                            this.Game, Owners.PLAYER, this.Town);
+                    }                    
                 }
 
                 if (OldKeyState.IsKeyDown(Keys.S)
                     && NewKeyState.IsKeyUp(Keys.S))
                 {
-                    this.Game.EntityFactory.GetInfantryEntity(this.Game, Owners.PLAYER, this.Town);
+                    if (this.Resources.BuyUnit())
+                    {
+                        this.Game.EntityFactory.GetInfantryEntity(
+                            this.Game, Owners.PLAYER, this.Town);
+                    }
+                }
+
+                if (OldKeyState.IsKeyDown(Keys.D)
+                    && NewKeyState.IsKeyUp(Keys.D))
+                {
+                    if (this.Resources.BuyUnit())
+                    {
+                        this.Game.EntityFactory.GetKnightEntity(
+                            this.Game, Owners.PLAYER, this.Town);
+                    }
+                }
+
+                if (OldKeyState.IsKeyDown(Keys.F)
+                    && NewKeyState.IsKeyUp(Keys.F))
+                {
+                    this.Resources.BuyShop();
                 }
             }
             OldKeyState = NewKeyState;

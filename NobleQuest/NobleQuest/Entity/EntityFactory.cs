@@ -20,7 +20,7 @@ namespace NobleQuest.Entity
         {
             // Instantiate and Set Properties in GameEntity
             ResourceEntity resource = new ResourceEntity();
-            resource.Texture = game.Content.Load<Texture2D>("ResourceBar");
+            resource.Texture = game.Content.Load<Texture2D>("ResourceText");
             resource.Position = position;
             resource.Velocity = new Vector2(0f, 0f);
             resource.Midpoint = new Vector2(0f, 0f);
@@ -29,17 +29,12 @@ namespace NobleQuest.Entity
             resource.DestRectangle = new Rectangle((int)position.X, (int)position.Y,
                 resource.Texture.Width, resource.Texture.Height);
             resource.Game = game;
-            resource.PlayerOwned = true;
-            resource.EnemyOwned = false;
+            resource.Scale = 0.50f;
 
             // Set Properties in ResourceEntity
             resource.IsVisible = visible;
-            resource.SpriteFont = game.SpriteFont;
-            resource.Gold = 200;
-            resource.Laborers = 1;
-            resource.PopulationLimit = 1;
-            resource.CurrentPopulation = 1;
-            resource.HasBlacksmith = false;           
+
+            game.GameEntityList.Add(resource);
 
             return resource;
         }
@@ -184,6 +179,7 @@ namespace NobleQuest.Entity
                 case Owners.ENEMY:
                     infantryEntity.Texture = game.Content.Load<Texture2D>("EnemyInfantry");
                     infantryEntity.Direction = DynamicEntity.Directions.LEFT;
+                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
                     break;
                 default:
                     break;
@@ -218,35 +214,137 @@ namespace NobleQuest.Entity
             return infantryEntity;
         } // Get Infantry Entity
 
-        public WorkerEntity GetWorkerEntity(NobleQuestGame game, bool playerOwned, TownNode town)
+        public DynamicEntity GetArcherEntity(NobleQuestGame game, Owners OwnedBy, GameEntity town)
+        {
+            // Instantiate and Set Properties in GameEntity
+            ArcherEntity archerEntity = new ArcherEntity(game);
+
+            switch (OwnedBy)
+            {
+                case Owners.PLAYER:
+                    archerEntity.Texture = game.Content.Load<Texture2D>("PlayerArcher");
+                    archerEntity.Direction = DynamicEntity.Directions.RIGHT;
+                    break;
+                case Owners.ENEMY:
+                    archerEntity.Texture = game.Content.Load<Texture2D>("EnemyArcher");
+                    archerEntity.Direction = DynamicEntity.Directions.LEFT;
+                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
+                    break;
+                default:
+                    break;
+            }
+
+            archerEntity.Position = town.Position;
+            archerEntity.Velocity = new Vector2(0f, 0f);
+            archerEntity.Midpoint = new Vector2(DynamicEntity.DIMENSION / 2, DynamicEntity.DIMENSION / 2);
+            archerEntity.Rotation = 0.0f;
+            archerEntity.SrcRectangle = new Rectangle(0, 0, DynamicEntity.DIMENSION, DynamicEntity.DIMENSION);
+            archerEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
+                archerEntity.SrcRectangle.Width, archerEntity.SrcRectangle.Height);
+            archerEntity.Game = game;
+            archerEntity.Owner = OwnedBy;
+            archerEntity.State = DynamicEntity.States.STOPPED;
+
+            // Set Properties in Dynamic Entity
+            archerEntity.Location = (NodeEntity)town;
+
+            if (town.TargetEntity != null)
+            {
+                archerEntity.State = DynamicEntity.States.ATTACKING;
+                archerEntity.TargetEntity = town.TargetEntity;
+                archerEntity.Destination = town.TargetEntity.Location;
+
+                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.TargetEntity = archerEntity;
+            }
+
+            game.DynamicEntityList.Add(archerEntity);
+
+            return archerEntity;
+        } // Get Archer Entity
+
+        public DynamicEntity GetKnightEntity(NobleQuestGame game, Owners OwnedBy, GameEntity town)
+        {
+            // Instantiate and Set Properties in GameEntity
+            KnightEntity knightEntity = new KnightEntity(game);
+
+            switch (OwnedBy)
+            {
+                case Owners.PLAYER:
+                    knightEntity.Texture = game.Content.Load<Texture2D>("PlayerKnight");
+                    knightEntity.Direction = DynamicEntity.Directions.RIGHT;
+                    break;
+                case Owners.ENEMY:
+                    knightEntity.Texture = game.Content.Load<Texture2D>("EnemyKnight");
+                    knightEntity.Direction = DynamicEntity.Directions.LEFT;
+                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
+                    break;
+                default:
+                    break;
+            }
+
+            knightEntity.Position = town.Position;
+            knightEntity.Velocity = new Vector2(0f, 0f);
+            knightEntity.Midpoint = new Vector2(DynamicEntity.DIMENSION / 2, DynamicEntity.DIMENSION / 2);
+            knightEntity.Rotation = 0.0f;
+            knightEntity.SrcRectangle = new Rectangle(0, 0, DynamicEntity.DIMENSION, DynamicEntity.DIMENSION);
+            knightEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
+                knightEntity.SrcRectangle.Width, knightEntity.SrcRectangle.Height);
+            knightEntity.Game = game;
+            knightEntity.Owner = OwnedBy;
+            knightEntity.State = DynamicEntity.States.STOPPED;
+
+            // Set Properties in Dynamic Entity
+            knightEntity.Location = (NodeEntity)town;
+
+            if (town.TargetEntity != null)
+            {
+                knightEntity.State = DynamicEntity.States.ATTACKING;
+                knightEntity.TargetEntity = town.TargetEntity;
+                knightEntity.Destination = town.TargetEntity.Location;
+
+                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.TargetEntity = knightEntity;
+            }
+
+            game.DynamicEntityList.Add(knightEntity);
+
+            return knightEntity;
+        } // Get Archer Entity
+
+        public WorkerEntity GetWorkerEntity(NobleQuestGame game, Owners OwnedBy, TownNode town)
         {
             // Instantiate and Set Properties in GameEntity
             WorkerEntity workerEntity = new WorkerEntity(game);
+
+            switch (OwnedBy)
+            {
+                case Owners.PLAYER:
+                    workerEntity.Texture = game.Content.Load<Texture2D>("PlayerWorker");
+                    workerEntity.Direction = DynamicEntity.Directions.RIGHT;
+                    break;
+                case Owners.ENEMY:
+                    workerEntity.Texture = game.Content.Load<Texture2D>("EnemyWorker");
+                    workerEntity.Direction = DynamicEntity.Directions.LEFT;
+                    break;
+                default:
+                    break;
+            }
+
             workerEntity.Texture = game.Content.Load<Texture2D>("Worker");
             workerEntity.Position = town.Position;
             workerEntity.Velocity = new Vector2(0f, 0f);
             workerEntity.Midpoint = new Vector2(workerEntity.Texture.Width / 2, workerEntity.Texture.Height / 2);
             workerEntity.Rotation = 0.0f;
-            workerEntity.SrcRectangle = new Rectangle(0, 0, workerEntity.Texture.Width, workerEntity.Texture.Height);
+            workerEntity.SrcRectangle = new Rectangle(0, 0, DynamicEntity.DIMENSION, DynamicEntity.DIMENSION);
             workerEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
                 workerEntity.SrcRectangle.Width, workerEntity.SrcRectangle.Height);
             workerEntity.Game = game;
-            workerEntity.PlayerOwned = playerOwned;
-            workerEntity.EnemyOwned = !playerOwned;
+            workerEntity.Owner = OwnedBy;
+            workerEntity.State = DynamicEntity.States.STOPPED;
 
             // Set Properties in Dynamic Entity
-            // workerEntity.HitPoints = 100;
             workerEntity.Location = (NodeEntity)town;
-            // workerEntity.Destination = null;
-            // workerEntity.Moving = false;
-            if (playerOwned)
-            {
-                workerEntity.Direction = DynamicEntity.Directions.RIGHT;
-            }
-            else
-            {
-                workerEntity.Direction = DynamicEntity.Directions.LEFT;
-            }
 
             game.DynamicEntityList.Add(workerEntity);
 

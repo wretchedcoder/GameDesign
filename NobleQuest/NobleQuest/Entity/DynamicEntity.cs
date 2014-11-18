@@ -12,12 +12,19 @@ namespace NobleQuest.Entity
     public class DynamicEntity : GameEntity
     {
         public static int DIMENSION = 32;
-        
+
+        public enum UnitType { INFANTRY, ARCHER, KNIGHT };
+        public UnitType unitType;
+
         public enum States { STOPPED, MOVING, ATTACKING };
         public States State;
+        public States OldState;
 
         public enum Directions { LEFT, RIGHT };
         public Directions Direction;
+
+        public float PauseDelayTime = 0.0f;
+        public float PauseDelay = 0.5f;
 
         public NodeEntity Location;
         public NodeEntity Destination;
@@ -58,6 +65,17 @@ namespace NobleQuest.Entity
         {
             this.HitBar.Update(gameTime);
 
+            PauseDelayTime -=
+                gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            if (PauseDelayTime > 0)
+            {
+                return;
+            }
+            else
+            {
+                PauseDelayTime = 0.0f;
+            }
+
             // Animation Logic
             TotalTimePassed += gameTime.ElapsedGameTime.Milliseconds / 1000f;
             if (TotalTimePassed > FrameRate)
@@ -75,7 +93,7 @@ namespace NobleQuest.Entity
 
             if (this.HitPoint <= 0)
             {
-                this.RemoveFromGame();
+                this.RemoveFromGame(gameTime);
             }
 
             if (this.Location.Order == Orders.HALT
@@ -121,7 +139,8 @@ namespace NobleQuest.Entity
                     if (Destination.Occupant != null
                         && Destination.Occupant.Owner == this.Owner)
                     {
-                        StopEntity();
+                        PauseDelayTime = PauseDelay;
+                        State = States.STOPPED;
                     }
                     this.Position += this.Velocity;
                     this.DestRectangle.X = (int)(this.Position.X - this.Midpoint.X);
@@ -278,12 +297,20 @@ namespace NobleQuest.Entity
                 case Directions.LEFT:
                     if (this.Position.X <= this.Destination.Position.X)
                     {
+                        if (this.Owner == Owners.ENEMY)
+                        {
+                            this.Game.Enemy.NewPaths[this].Add(this.Destination);
+                        }
                         return true;
                     }
                     return false;
                 case Directions.RIGHT:
                     if (this.Position.X >= this.Destination.Position.X)
                     {
+                        if (this.Owner == Owners.ENEMY)
+                        {
+                            this.Game.Enemy.NewPaths[this].Add(this.Destination);
+                        }
                         return true;
                     }
                     return false;
@@ -335,6 +362,6 @@ namespace NobleQuest.Entity
 
         public virtual void Attack(TownNode target, GameTime gameTime) { }
 
-        public virtual void RemoveFromGame() { }
+        public virtual void RemoveFromGame(GameTime gameTime) { }
     }
 }
