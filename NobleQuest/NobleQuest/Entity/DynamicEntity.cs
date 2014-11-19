@@ -44,6 +44,9 @@ namespace NobleQuest.Entity
         public int CurrentFrame = 0;
         public int FRAME_MAX = 20;
 
+        public List<NodeEntity> VisitedPath;
+        public List<NodeEntity> ToVisitPath;
+
         public DynamicEntity()
         { }
 
@@ -59,6 +62,9 @@ namespace NobleQuest.Entity
 
             HitBar = new HitPointBarEntity(this.Game);
             HitBar.AssociatedEntity = this;
+
+            VisitedPath = new List<NodeEntity>();
+            ToVisitPath = new List<NodeEntity>();
         }
 
         public override void Update(GameTime gameTime)
@@ -97,7 +103,7 @@ namespace NobleQuest.Entity
             }
 
             if (this.Location.Order == Orders.HALT
-                && !this.IgnoresOrders)
+                && this.Owner != Owners.ENEMY)
             {
                 return;
             }
@@ -147,6 +153,7 @@ namespace NobleQuest.Entity
                     this.DestRectangle.Y = (int)(this.Position.Y - this.Midpoint.Y);
                     if (ArrivedAtDestination())
                     {
+                        this.VisitedPath.Add(Destination);
                         Destination.Occupant = this;
                         StopEntity();                        
                     }
@@ -160,6 +167,15 @@ namespace NobleQuest.Entity
 
         public void DetermineDestination()
         {
+            // If Enemy Owned, get next node in path
+            if (this.Owner == Owners.ENEMY
+                && this.ToVisitPath.Count > 0)
+            {
+                Destination = this.ToVisitPath[0];
+                this.ToVisitPath.Remove(Destination);
+                return;
+            }
+
             // Check for Preferred Path Entity
             if (Location.PreferredPathEntity != null
                 && Location.Owner == this.Owner
@@ -297,20 +313,12 @@ namespace NobleQuest.Entity
                 case Directions.LEFT:
                     if (this.Position.X <= this.Destination.Position.X)
                     {
-                        if (this.Owner == Owners.ENEMY)
-                        {
-                            this.Game.Enemy.NewPaths[this].Add(this.Destination);
-                        }
                         return true;
                     }
                     return false;
                 case Directions.RIGHT:
                     if (this.Position.X >= this.Destination.Position.X)
                     {
-                        if (this.Owner == Owners.ENEMY)
-                        {
-                            this.Game.Enemy.NewPaths[this].Add(this.Destination);
-                        }
                         return true;
                     }
                     return false;

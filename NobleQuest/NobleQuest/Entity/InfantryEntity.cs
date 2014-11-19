@@ -129,6 +129,10 @@ namespace NobleQuest.Entity
 
         public override void RemoveFromGame(GameTime gameTime)
         {
+            if (this.Owner == Owners.ENEMY)
+            {
+                this.Game.Enemy.NewPaths.Add(this.VisitedPath);
+            }
             this.Game.DynamicEntityList.Remove(this);
             this.Location.Occupant = null;
             if (TargetEntity != null)

@@ -179,7 +179,6 @@ namespace NobleQuest.Entity
                 case Owners.ENEMY:
                     infantryEntity.Texture = game.Content.Load<Texture2D>("EnemyInfantry");
                     infantryEntity.Direction = DynamicEntity.Directions.LEFT;
-                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
                     break;
                 default:
                     break;
@@ -228,7 +227,6 @@ namespace NobleQuest.Entity
                 case Owners.ENEMY:
                     archerEntity.Texture = game.Content.Load<Texture2D>("EnemyArcher");
                     archerEntity.Direction = DynamicEntity.Directions.LEFT;
-                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
                     break;
                 default:
                     break;
@@ -277,7 +275,6 @@ namespace NobleQuest.Entity
                 case Owners.ENEMY:
                     knightEntity.Texture = game.Content.Load<Texture2D>("EnemyKnight");
                     knightEntity.Direction = DynamicEntity.Directions.LEFT;
-                    game.Enemy.NewPaths.Add(infantryEntity, new List<NodeEntity>());
                     break;
                 default:
                     break;

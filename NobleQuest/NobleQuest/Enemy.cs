@@ -22,16 +22,14 @@ namespace NobleQuest
         public bool HasArmory = false;
 
         public float DecisionTime = 0.0f;
-        public float DecisionDelay = 30.0f;
+        public float DecisionDelay = 15.0f;
 
-        public Dictionary<DynamicEntity, List<NodeEntity>> NewPaths;
-        public List<List<NodeEntity>> PriorityPaths;
+        public List<List<NodeEntity>> NewPaths;
 
         public Enemy()
         {
             EntityFactory = new EntityFactory();
-            NewPaths = new Dictionary<DynamicEntity, List<NodeEntity>>();
-            PriorityPaths = new List<List<NodeEntity>>();
+            NewPaths = new List<List<NodeEntity>>();
         }
 
         public void Update(GameTime gameTime)
@@ -50,9 +48,32 @@ namespace NobleQuest
 
         public void MakeDecision(GameTime gameTime)
         {
-            foreach(DynamicEntity entity in NewPaths.Keys)
+            if (this.Resources.BuyUnit())
             {
-
+                DynamicEntity NewEntity = new DynamicEntity();
+                int unit = this.Game.Random.Next(3);
+                switch(unit)
+                {
+                    case 0:
+                        NewEntity = EntityFactory.GetInfantryEntity(
+                            this.Game, Owners.ENEMY, this.Town);
+                        break;
+                    case 1:
+                        NewEntity = EntityFactory.GetArcherEntity(
+                            this.Game, Owners.ENEMY, this.Town);
+                        break;
+                    case 2:
+                        NewEntity = EntityFactory.GetKnightEntity(
+                            this.Game, Owners.ENEMY, this.Town);
+                        break;
+                    default:
+                        break;
+                }
+                if (this.NewPaths.Count > 0)
+                {
+                    NewEntity.ToVisitPath = this.NewPaths[0];
+                    this.NewPaths.Remove(this.NewPaths[0]);
+                }                
             }
         }
     }
