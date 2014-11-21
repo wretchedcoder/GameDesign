@@ -16,7 +16,7 @@ namespace NobleQuest.Entity
         public enum UnitType { INFANTRY, ARCHER, KNIGHT };
         public UnitType unitType;
 
-        public enum States { STOPPED, MOVING, ATTACKING };
+        public enum States { STOPPED, MOVING, ATTACKING, NONE };
         public States State;
         public States OldState;
 

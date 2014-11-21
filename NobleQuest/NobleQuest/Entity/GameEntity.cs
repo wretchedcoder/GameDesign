@@ -30,6 +30,7 @@ namespace NobleQuest
         public Boolean EnemyOwned;
         public Random RandomGenerator;
         public bool IsVisible;
+        public bool IsAlive = true;
         public Owners Owner;
         public Orders Order;
 

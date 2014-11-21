@@ -66,7 +66,7 @@ namespace NobleQuest
         {
             base.IsMouseVisible = true;
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.PreferredBackBufferHeight = 600;
+            Graphics.PreferredBackBufferHeight = 500;
             Graphics.PreferredBackBufferWidth = 800;
             Graphics.ApplyChanges();
 
@@ -259,15 +259,36 @@ namespace NobleQuest
             this.Enemy.Resources.Update(gameTime);
             for (int i = PathEntityList.Count - 1; i >= 0; i--)
             {
-                PathEntityList[i].Update(gameTime);
+                if (PathEntityList[i].IsAlive)
+                {
+                    PathEntityList[i].Update(gameTime);
+                }     
+                else
+                {
+                    PathEntityList.Remove(PathEntityList[i]);
+                }
             }
             for (int i = NodeEntityList.Count - 1; i >= 0; i--)
             {
-                NodeEntityList[i].Update(gameTime);
+                if (NodeEntityList[i].IsAlive)
+                {
+                    NodeEntityList[i].Update(gameTime);
+                }
+                else
+                {
+                    NodeEntityList.Remove(NodeEntityList[i]);
+                }
             }
             for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
             {
-                DynamicEntityList[i].Update(gameTime);
+                if (DynamicEntityList[i].IsAlive)
+                {
+                    DynamicEntityList[i].Update(gameTime);
+                }
+                else
+                {
+                    DynamicEntityList.Remove(DynamicEntityList[i]);
+                }
             }
             SelectionEntity.Update(gameTime);
 

@@ -13,7 +13,8 @@ namespace NobleQuest.Entity
             HitPointMax = 100;
             HitPoint = 100;
             Damage = 20;
-            this.Game = Game;            
+            this.Game = Game;
+            this.unitType = UnitType.KNIGHT;
         }
 
         public override int GetModifier()

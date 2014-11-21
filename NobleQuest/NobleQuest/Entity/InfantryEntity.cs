@@ -72,7 +72,7 @@ namespace NobleQuest.Entity
                 case Owners.PLAYER:
                     if (node.Owner != Owners.PLAYER)
                     {
-                        node.ClearPreferred();
+//                        node.ClearPreferred();
                         node.Owner = Owners.PLAYER;                        
                     }
                     break;
@@ -94,15 +94,29 @@ namespace NobleQuest.Entity
             {
                 if (this.State != States.ATTACKING)
                 {
-                    this.OldState = this.State;
+                    if (this.OldState == States.NONE)
+                    {
+                        this.OldState = this.State;
+                    }                    
                     this.State = States.ATTACKING;
                     this.TargetEntity = dynamic;
                 }
                 if (dynamic.State != States.ATTACKING)
                 {
-                    dynamic.OldState = dynamic.State;
+                    if (dynamic.OldState == States.NONE)
+                    {
+                        dynamic.OldState = dynamic.State;
+                    } 
                     dynamic.State = States.ATTACKING;
                     dynamic.TargetEntity = this;
+                }
+            }
+            else if (this != dynamic)
+            {
+                if (this.State != States.ATTACKING)
+                { 
+                    PauseDelayTime = PauseDelay;
+                    State = States.STOPPED;
                 }
             }
         }
@@ -138,6 +152,7 @@ namespace NobleQuest.Entity
             if (TargetEntity != null)
             {
                 TargetEntity.State = TargetEntity.OldState;
+                TargetEntity.OldState = States.NONE;
                 TargetEntity.Update(gameTime);
                 TargetEntity.TargetEntity = null;
             }
