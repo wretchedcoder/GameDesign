@@ -12,11 +12,13 @@ namespace NobleQuest.Entity
     public class TownNode : NodeEntity
     {
         public HitPointBarEntity HitBar;
+        public DynamicEntity LastAttackedBy = null;
 
         public TownNode(NobleQuestGame Game, Owners Owner) : base(Game)
         {
             this.HitPointMax = 1000;
             this.HitPoint = 1000;
+            this.Damage = 5;
 
             this.Owner = Owner;
 
@@ -29,14 +31,14 @@ namespace NobleQuest.Entity
             this.HitBar.UpdatePosition = false;
             if (this.Owner == Owners.PLAYER)
             {
-                this.HitBar.Position.X = 0;
-                this.HitBar.Position.Y = 0;
+                this.HitBar.Position.X = 10;
+                this.HitBar.Position.Y = 10;
             }
             else
             {
                 this.HitBar.Position.X = 
-                    this.Game.Graphics.PreferredBackBufferWidth - this.HitBar.Background.Width;
-                this.HitBar.Position.Y = 0;
+                    this.Game.Graphics.PreferredBackBufferWidth - this.HitBar.Background.Width - 10;
+                this.HitBar.Position.Y = 10;
                 this.HitBar.InvertDirection = true;
             }
             

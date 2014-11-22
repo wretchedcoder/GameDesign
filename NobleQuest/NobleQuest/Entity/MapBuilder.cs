@@ -87,6 +87,13 @@ namespace NobleQuest.Entity
                 LastGameEntity = ThisGameEntity;
             }
 
+            if (this.Game.TopEnd == null)
+                this.Game.TopEnd = (NodeEntity)LastGameEntity;
+            else if (this.Game.MidEnd == null)
+                this.Game.MidEnd = (NodeEntity)LastGameEntity;
+            else if (this.Game.BotEnd == null)
+                this.Game.BotEnd = (NodeEntity)LastGameEntity;
+
             this.Game.PathEntityList.Add(EntityFactory.GetPathEntity(this.Game, (NodeEntity)LastGameEntity, endNode));
         }
 

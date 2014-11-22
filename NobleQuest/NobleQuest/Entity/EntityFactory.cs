@@ -189,22 +189,24 @@ namespace NobleQuest.Entity
             infantryEntity.Midpoint = new Vector2(DynamicEntity.DIMENSION / 2, DynamicEntity.DIMENSION / 2);
             infantryEntity.Rotation = 0.0f;
             infantryEntity.SrcRectangle = new Rectangle(0, 0, DynamicEntity.DIMENSION, DynamicEntity.DIMENSION);
-            infantryEntity.DestRectangle = new Rectangle((int)town.Position.X, (int)town.Position.Y,
+            infantryEntity.DestRectangle = new Rectangle(
+                (int)town.Position.X, 
+                (int)town.Position.Y,
                 infantryEntity.SrcRectangle.Width, infantryEntity.SrcRectangle.Height);
             infantryEntity.Game = game;
             infantryEntity.Owner = OwnedBy;
-            infantryEntity.State = DynamicEntity.States.STOPPED;
+            infantryEntity.State = States.STOPPED;
 
             // Set Properties in Dynamic Entity
             infantryEntity.Location = (NodeEntity)town;
 
             if (town.TargetEntity != null)
             {
-                infantryEntity.State = DynamicEntity.States.ATTACKING;
+                infantryEntity.State = States.ATTACKING;
                 infantryEntity.TargetEntity = town.TargetEntity;
-                infantryEntity.Destination = town.TargetEntity.Location;
+                //infantryEntity.Destination = town.TargetEntity.Location;
 
-                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.State = States.ATTACKING;
                 town.TargetEntity.TargetEntity = infantryEntity;                
             }            
 
@@ -241,18 +243,18 @@ namespace NobleQuest.Entity
                 archerEntity.SrcRectangle.Width, archerEntity.SrcRectangle.Height);
             archerEntity.Game = game;
             archerEntity.Owner = OwnedBy;
-            archerEntity.State = DynamicEntity.States.STOPPED;
+            archerEntity.State = States.STOPPED;
 
             // Set Properties in Dynamic Entity
             archerEntity.Location = (NodeEntity)town;
 
             if (town.TargetEntity != null)
             {
-                archerEntity.State = DynamicEntity.States.ATTACKING;
+                archerEntity.State = States.ATTACKING;
                 archerEntity.TargetEntity = town.TargetEntity;
-                archerEntity.Destination = town.TargetEntity.Location;
+                //archerEntity.Destination = town.TargetEntity.Location;
 
-                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.State = States.ATTACKING;
                 town.TargetEntity.TargetEntity = archerEntity;
             }
 
@@ -289,18 +291,18 @@ namespace NobleQuest.Entity
                 knightEntity.SrcRectangle.Width, knightEntity.SrcRectangle.Height);
             knightEntity.Game = game;
             knightEntity.Owner = OwnedBy;
-            knightEntity.State = DynamicEntity.States.STOPPED;
+            knightEntity.State = States.STOPPED;
 
             // Set Properties in Dynamic Entity
             knightEntity.Location = (NodeEntity)town;
 
             if (town.TargetEntity != null)
             {
-                knightEntity.State = DynamicEntity.States.ATTACKING;
+                knightEntity.State = States.ATTACKING;
                 knightEntity.TargetEntity = town.TargetEntity;
-                knightEntity.Destination = town.TargetEntity.Location;
+                //knightEntity.Destination = town.TargetEntity.Location;
 
-                town.TargetEntity.State = DynamicEntity.States.ATTACKING;
+                town.TargetEntity.State = States.ATTACKING;
                 town.TargetEntity.TargetEntity = knightEntity;
             }
 
@@ -338,7 +340,7 @@ namespace NobleQuest.Entity
                 workerEntity.SrcRectangle.Width, workerEntity.SrcRectangle.Height);
             workerEntity.Game = game;
             workerEntity.Owner = OwnedBy;
-            workerEntity.State = DynamicEntity.States.STOPPED;
+            workerEntity.State = States.STOPPED;
 
             // Set Properties in Dynamic Entity
             workerEntity.Location = (NodeEntity)town;

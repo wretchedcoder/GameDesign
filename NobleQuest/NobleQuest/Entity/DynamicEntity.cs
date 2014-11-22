@@ -9,14 +9,16 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace NobleQuest.Entity
 {
+    public enum UnitType { INFANTRY, ARCHER, KNIGHT };
+
+    public enum States { STOPPED, MOVING, ATTACKING, NONE };
+
     public class DynamicEntity : GameEntity
     {
         public static int DIMENSION = 32;
-
-        public enum UnitType { INFANTRY, ARCHER, KNIGHT };
+        
         public UnitType unitType;
-
-        public enum States { STOPPED, MOVING, ATTACKING, NONE };
+        
         public States State;
         public States OldState;
 
@@ -46,9 +48,13 @@ namespace NobleQuest.Entity
 
         public List<NodeEntity> VisitedPath;
         public List<NodeEntity> ToVisitPath;
+        public int ToVisitedIndex = 0;
 
         public DynamicEntity()
-        { }
+        {
+            VisitedPath = new List<NodeEntity>();
+            ToVisitPath = new List<NodeEntity>();
+        }
 
         public DynamicEntity(NobleQuestGame Game)
         {
@@ -62,6 +68,7 @@ namespace NobleQuest.Entity
 
             HitBar = new HitPointBarEntity(this.Game);
             HitBar.AssociatedEntity = this;
+            HitBar.InitBar();
 
             VisitedPath = new List<NodeEntity>();
             ToVisitPath = new List<NodeEntity>();
@@ -69,8 +76,6 @@ namespace NobleQuest.Entity
 
         public override void Update(GameTime gameTime)
         {
-            this.HitBar.Update(gameTime);
-
             PauseDelayTime -=
                 gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
             if (PauseDelayTime > 0)
@@ -103,7 +108,8 @@ namespace NobleQuest.Entity
             }
 
             if (this.Location.Order == Orders.HALT
-                && this.Owner != Owners.ENEMY)
+                && this.Owner != Owners.ENEMY
+                && this.State == States.STOPPED)
             {
                 return;
             }
@@ -113,11 +119,6 @@ namespace NobleQuest.Entity
                 case States.STOPPED:
                     // Determine Destination
                     this.DetermineDestination();
-                    if (this.Destination.Occupant != null
-                        && this.Destination.Occupant.Owner == this.Owner)
-                    {
-                        return;
-                    }
                     if (CanMoveToNonOwned)
                     {
                         this.SetVelocityAndRotation();
@@ -138,7 +139,7 @@ namespace NobleQuest.Entity
                         {
                             ReverseDirection();
                         }
-                    }                                      
+                    }                 
                     break;
                 case States.MOVING:
                     // Update Position, DestRectangle, etc.
@@ -162,23 +163,30 @@ namespace NobleQuest.Entity
                     // If a state is not in base class (e.g. attack),
                     // then it will be handled in the subclass Update()
                     break;
-            }
+            } // End of switch
+            this.HitBar.Update(gameTime);
         }
 
         public void DetermineDestination()
         {
+            // If we already have a Destination, do nothing
+            if (this.Destination != null)
+            {
+                return;
+            }
+
             // If Enemy Owned, get next node in path
             if (this.Owner == Owners.ENEMY
-                && this.ToVisitPath.Count > 0)
+                && ToVisitedIndex < this.ToVisitPath.Count)
             {
-                Destination = this.ToVisitPath[0];
-                this.ToVisitPath.Remove(Destination);
+                Destination = this.ToVisitPath[ToVisitedIndex];
+                ToVisitedIndex++;
                 return;
             }
 
             // Check for Preferred Path Entity
             if (Location.PreferredPathEntity != null
-                && Location.Owner == this.Owner
+                && this.Owner != Owners.ENEMY
                 && !IsIgnoringPreferredPath)
             {
                 switch (Direction)

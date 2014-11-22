@@ -35,6 +35,8 @@ namespace NobleQuest.Entity
                 {
                     this.Attack(TargetTown, gameTime);
                 }
+                this.DestRectangle.X = (int)(this.Position.X - this.Midpoint.X);
+                this.DestRectangle.Y = (int)(this.Position.Y - this.Midpoint.Y);
             }
         }
 
@@ -55,37 +57,7 @@ namespace NobleQuest.Entity
 
         public override void HandleCollision(NodeEntity node) 
         { 
-            // HandleCollison(TownNode) handles this...
-            if (node.isTown)
-            {
-                return;
-            }
-
-            if (node.Occupant != null
-                && node.Occupant.Owner != this.Owner)
-            {
-                return;
-            }
-
-            switch (Owner)
-            {
-                case Owners.PLAYER:
-                    if (node.Owner != Owners.PLAYER)
-                    {
-//                        node.ClearPreferred();
-                        node.Owner = Owners.PLAYER;                        
-                    }
-                    break;
-                case Owners.ENEMY:
-                    if (node.Owner != Owners.ENEMY)
-                    {
-                        node.ClearPreferred();
-                        node.Owner = Owners.ENEMY;
-                    }
-                    break;
-                default:
-                    break;
-            }
+            
         }
 
         public override void HandleCollision(DynamicEntity dynamic) 
@@ -113,20 +85,40 @@ namespace NobleQuest.Entity
             }
             else if (this != dynamic)
             {
-                if (this.State != States.ATTACKING)
-                { 
-                    PauseDelayTime = PauseDelay;
-                    State = States.STOPPED;
+                if (this.Direction == Directions.RIGHT
+                    && dynamic.Position.X > this.Position.X)
+                {
+                    if (this.State != States.ATTACKING)
+                    {
+                        PauseDelayTime = PauseDelay;
+                        State = States.STOPPED;
+                    }
                 }
+                else if (this.Direction == Directions.LEFT
+                    && dynamic.Position.X < this.Position.X)
+                {
+                    if (this.State != States.ATTACKING)
+                    {
+                        PauseDelayTime = PauseDelay;
+                        State = States.STOPPED;
+                    }
+                }                
             }
         }
 
         public override void Attack(DynamicEntity target, GameTime gameTime) 
         {
+            if (!target.IsAlive)
+            {
+                target = null;
+                this.State = States.STOPPED;
+                return;
+            }
+
             TotalAttackTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
             if (TotalAttackTime >= AttackCooldown)
             {
-                target.HitPoint -= this.Damage;
+                target.HitPoint -= this.Damage + this.GetModifier();
                 TotalAttackTime -= AttackCooldown;
             }            
         }
@@ -137,22 +129,32 @@ namespace NobleQuest.Entity
             if (TotalAttackTime >= AttackCooldown)
             {
                 target.HitPoint -= this.Damage + this.GetModifier();
+                this.HitPoint -= target.Damage;
                 TotalAttackTime -= AttackCooldown;
+                target.LastAttackedBy = this;
             }
         }
 
         public override void RemoveFromGame(GameTime gameTime)
         {
+            this.IsAlive = false;
             if (this.Owner == Owners.ENEMY)
             {
-                this.Game.Enemy.NewPaths.Add(this.VisitedPath);
+                if (TargetEntity == null)
+                {
+                    this.Game.Enemy.AddPath(UnitType.INFANTRY, this.VisitedPath);
+                }
+                else
+                {
+                    this.Game.Enemy.AddPath(TargetEntity.unitType, this.VisitedPath);
+                }                
             }
             this.Game.DynamicEntityList.Remove(this);
             this.Location.Occupant = null;
             if (TargetEntity != null)
             {
-                TargetEntity.State = TargetEntity.OldState;
-                TargetEntity.OldState = States.NONE;
+                TargetEntity.State = States.STOPPED;
+                //TargetEntity.OldState = States.NONE;
                 TargetEntity.Update(gameTime);
                 TargetEntity.TargetEntity = null;
             }

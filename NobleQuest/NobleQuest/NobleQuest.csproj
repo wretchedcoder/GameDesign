@@ -43,6 +43,7 @@
     <Compile Include="Entity\GameEntity.cs" />
     <Compile Include="Entity\HItPointBarEntity.cs" />
     <Compile Include="Entity\InfantryEntity.cs" />
+    <Compile Include="Entity\IntelligentList.cs" />
     <Compile Include="Entity\KnightEntity.cs" />
     <Compile Include="Entity\MapBuilder.cs" />
     <Compile Include="Entity\NodeEntity.cs" />
@@ -104,7 +105,7 @@
     <Content Include="Content\HitPointBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Minstrel Guild.mp3">
+    <Content Include="Content\MinstrelGuild.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\NeutralNodeTexture.png">
@@ -167,6 +168,17 @@
     <None Include="Content\Arial.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

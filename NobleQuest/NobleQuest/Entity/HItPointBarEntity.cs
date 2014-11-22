@@ -39,6 +39,12 @@ namespace NobleQuest.Entity
             this.SrcForegroundRectangle = new Rectangle();
         }
 
+        public void InitBar()
+        {
+            this.Position.X = AssociatedEntity.Position.X - AssociatedEntity.DestRectangle.Width;
+            this.Position.Y = AssociatedEntity.Position.Y - AssociatedEntity.Midpoint.Y - this.Background.Height;
+        }
+
         public override void Update(GameTime gameTime)
         {
             float leftHitPoints = (float)this.AssociatedEntity.HitPoint /
@@ -67,9 +73,7 @@ namespace NobleQuest.Entity
             this.SrcForegroundRectangle.X = 0;
             this.SrcForegroundRectangle.Y = 0;
             this.SrcForegroundRectangle.Width = this.AdjustedWith;
-            this.SrcForegroundRectangle.Height = this.Foreground.Height;
-            
-            
+            this.SrcForegroundRectangle.Height = this.Foreground.Height;           
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -49,13 +49,13 @@ namespace NobleQuest.Entity
         {
             base.Update(gameTime);
 
-            ShopCooldown = 1.00f - (Shops * 0.01f);
+            ShopCooldown = 1.00f - ((float)Shops * 0.01f);
             
             ShopTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
             if (ShopTime > ShopCooldown)
             {
                 ShopTime -= ShopCooldown;
-                Gold += Shops + 1;
+                Gold++;
             }
 
             FontGoldPosition = this.Position;

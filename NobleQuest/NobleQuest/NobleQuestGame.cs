@@ -1,15 +1,16 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Storage;
 using NobleQuest.Entity;
+using System;
+using System.Collections.Generic;
+using WMPLib;
 #endregion
 
 namespace NobleQuest
@@ -61,6 +62,10 @@ namespace NobleQuest
         public KeyboardState NewKeyState;
         public NodeEntity SelectedNode;
 
+        public NodeEntity TopEnd = null;
+        public NodeEntity MidEnd = null;
+        public NodeEntity BotEnd = null;
+
         public NobleQuestGame()
             : base()
         {
@@ -103,15 +108,19 @@ namespace NobleQuest
             DynamicEntityList = new List<DynamicEntity>();
             PathSelectionList = new List<PathSelectionEntity>();
             OrderList = new List<GameEntity>();
+            TopEnd = null;
+            MidEnd = null;
+            BotEnd = null;
 
             this.EntityFactory = new EntityFactory();
             this.Player = new Player();
             this.Player.Game = this;
-            this.Enemy = new Enemy();
-            this.Enemy.Game = this; 
+            this.Enemy = new Enemy(this);
 
             MapBuilder MapBuilder = new MapBuilder();
-            MapBuilder.BuildMap(this);            
+            MapBuilder.BuildMap(this);
+
+            this.Enemy.initPaths();
         }
 
         public void InitTitleScreen()
@@ -132,10 +141,10 @@ namespace NobleQuest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            
 
-            // TODO: use this.Content to load your game content here
-            
+            WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+            wplayer.URL = "Content/MinstrelGuild.mp3";
+            wplayer.controls.play();
         }
 
         /// <summary>
@@ -230,8 +239,7 @@ namespace NobleQuest
             {
                 if (OldKeyState.IsKeyDown(Keys.Tab)
                     && NewKeyState.IsKeyUp(Keys.Tab)
-                    && SelectionEntity.SelectedNode != null
-                    && SelectionEntity.SelectedNode.Owner == Owners.PLAYER)
+                    && SelectionEntity.SelectedNode != null)
                 {
                     SelectionEntity.SelectedNode.IncrementPreferredPath();
                 }
@@ -333,6 +341,12 @@ namespace NobleQuest
                 this.GameWon = false;
                 this.GameLost = false;
                 this.TextTime = 0.0f;
+                this.GameEntityList.Clear();
+                this.NodeEntityList.Clear();
+                this.PathEntityList.Clear();
+                this.DynamicEntityList.Clear();
+                this.PathSelectionList.Clear();
+                this.OrderList.Clear();
                 this.buildMap();
             }
         }
@@ -390,14 +404,14 @@ namespace NobleQuest
             {
                 NodeEntityList[i].Draw(this.SpriteBatch);
             }
-            for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
-            {
-                DynamicEntityList[i].Draw(this.SpriteBatch);
-            }
             for (int i = PathSelectionList.Count - 1; i >= 0; i--)
             {
                 PathSelectionList[i].Draw(this.SpriteBatch);
             }
+            for (int i = DynamicEntityList.Count - 1; i >= 0; i--)
+            {
+                DynamicEntityList[i].Draw(this.SpriteBatch);
+            }            
             for (int i = OrderList.Count - 1; i >= 0; i--)
             {
                 OrderList[i].Draw(this.SpriteBatch);
